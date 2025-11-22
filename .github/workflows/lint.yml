@@ -1,0 +1,25 @@
+name: Lint
+
+concurrency:
+  group: lint-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: fmt
+        run: nix develop -c cargo fmt
+
+      - name: Lint
+        run: |
+          nix develop -c cargo clippy -- -Dwarnings
