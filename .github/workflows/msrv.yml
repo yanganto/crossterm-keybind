@@ -1,0 +1,27 @@
+ame: MSRV
+
+concurrency:
+  group: msrv-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+
+jobs:
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test msrv default feature
+        run: |
+          nix develop .#msrv -c cargo test
+
+      - name: Test msrv with crossterm_0_27
+        run: |
+          nix develop .#msrv -c cargo test --features=crossterm_0_27 --no-default-features
+
