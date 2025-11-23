@@ -53,7 +53,7 @@ impl Serialize for KeyBinding {
             KeyCode::Media(media_keycode) => s.push_str(&media_keycode.to_string()),
             _ => {
                 return Err(ser::Error::custom(format!(
-                    "Unsupport KeyCode: {:}",
+                    "Unsupported KeyCode: {:}",
                     self.code
                 )))
             }
@@ -216,10 +216,10 @@ impl<'de> Deserialize<'de> for KeyBinding {
     }
 }
 
-/// Move to ratatui-kb Crate
+/// KeyBindings struct for key bind configure
 #[derive(Serialize, Deserialize)]
 pub struct KeyBindings {
-    /// More key binding for one event
+    /// More than one key binding for an event
     key_bindings: Vec<KeyBinding>,
 }
 
@@ -244,7 +244,7 @@ mod tests {
         let serialized = toml::to_string(&only_modifiers);
         assert_eq!(
             serialized,
-            Err(ser::Error::custom("Unsupport KeyCode: Null"))
+            Err(ser::Error::custom("Unsupported KeyCode: Null"))
         );
 
         let serialized = toml::to_string(&t_with_esc).unwrap();
