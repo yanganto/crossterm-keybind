@@ -1,8 +1,9 @@
 #[cfg(feature = "crossterm_0_28_1")]
-use crossterm_0_28_1::event::{KeyCode, KeyModifiers, MediaKeyCode};
+use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 
+#[derive(PartialEq)]
 struct KeyBinding {
     pub code: KeyCode,
     pub modifiers: KeyModifiers,
@@ -214,10 +215,22 @@ impl<'de> Deserialize<'de> for KeyBinding {
 }
 
 /// KeyBindings struct for key bind configure
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, PartialEq)]
 pub struct KeyBindings {
     /// More than one key binding for an event
-    key_bindings: Vec<KeyBinding>,
+    pub(self) key_bindings: Vec<KeyBinding>,
+}
+
+impl KeyBindings {
+    /// Match one of key bindings
+    pub fn match_any(&self, key_event: &KeyEvent) -> bool {
+        for key_bind in self.key_bindings.iter() {
+            if key_bind.code == key_event.code && key_bind.modifiers == key_event.modifiers {
+                return true;
+            }
+        }
+        false
+    }
 }
 
 #[cfg(test)]
