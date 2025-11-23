@@ -4,7 +4,7 @@ use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(PartialEq)]
-struct KeyBinding {
+pub struct KeyBinding {
     pub code: KeyCode,
     pub modifiers: KeyModifiers,
 }
@@ -216,15 +216,12 @@ impl<'de> Deserialize<'de> for KeyBinding {
 
 /// KeyBindings struct for key bind configure
 #[derive(Serialize, Deserialize, PartialEq)]
-pub struct KeyBindings {
-    /// More than one key binding for an event
-    pub(self) key_bindings: Vec<KeyBinding>,
-}
+pub struct KeyBindings(Vec<KeyBinding>);
 
 impl KeyBindings {
     /// Match one of key bindings
     pub fn match_any(&self, key_event: &KeyEvent) -> bool {
-        for key_bind in self.key_bindings.iter() {
+        for key_bind in self.0.iter() {
             if key_bind.code == key_event.code && key_bind.modifiers == key_event.modifiers {
                 return true;
             }
@@ -236,14 +233,19 @@ impl KeyBindings {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[derive(Serialize, Deserialize)]
     struct T {
         kb: KeyBinding,
     }
+    #[derive(Serialize, Deserialize)]
+    struct U {
+        kbs: KeyBindings,
+    }
 
     #[test]
-    fn ser_keybind_config() {
-        let (t_with_modifiers, t, only_modifiers, t_with_esc) = keybind_configs();
+    fn ser_keybinding_config() {
+        let (t_with_modifiers, t, only_modifiers, t_with_esc) = keybinding_configs();
 
         let serialized = toml::to_string(&t_with_modifiers).unwrap();
         assert_eq!(serialized, "kb = \"Control+c\"\n");
@@ -262,8 +264,8 @@ mod tests {
     }
 
     #[test]
-    fn de_keybind_config() {
-        let (t_with_modifiers, t, _only_modifiers, t_with_esc) = keybind_configs();
+    fn de_keybinding_config() {
+        let (t_with_modifiers, t, _only_modifiers, t_with_esc) = keybinding_configs();
 
         let serialized = toml::to_string(&t_with_modifiers).unwrap();
         let desered_t: T = toml::from_str(serialized.as_str()).unwrap();
@@ -281,8 +283,16 @@ mod tests {
         assert_eq!(desered_t.kb.modifiers, t_with_esc.kb.modifiers);
     }
 
+    #[test]
+    fn ser_keybindings_config() {
+        let config = keybindings_config();
+
+        let serialized = toml::to_string(&config).unwrap();
+        assert_eq!(serialized, "kbs = [\"Control+c\", \"Q\"]\n");
+    }
+
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
-    fn keybind_configs() -> (T, T, T, T) {
+    fn keybinding_configs() -> (T, T, T, T) {
         (
             T {
                 kb: KeyBinding {
@@ -309,5 +319,21 @@ mod tests {
                 },
             },
         )
+    }
+
+    /// Return keybind config with multiple keybindings
+    fn keybindings_config() -> U {
+        U {
+            kbs: KeyBindings(vec![
+                KeyBinding {
+                    code: KeyCode::Char('c'),
+                    modifiers: KeyModifiers::CONTROL,
+                },
+                KeyBinding {
+                    code: KeyCode::Char('Q'),
+                    modifiers: KeyModifiers::NONE,
+                },
+            ]),
+        }
     }
 }
