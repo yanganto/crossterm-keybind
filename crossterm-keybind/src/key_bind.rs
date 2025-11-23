@@ -2,6 +2,7 @@
 use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
+use std::fmt;
 
 #[derive(PartialEq)]
 pub struct KeyBinding {
@@ -214,6 +215,60 @@ impl<'de> Deserialize<'de> for KeyBinding {
     }
 }
 
+impl fmt::Display for KeyBinding {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.modifiers {
+            KeyModifiers::SHIFT => write!(f, "\u{21e7}")?, //⇧
+            KeyModifiers::CONTROL => write!(f, "^")?,
+            KeyModifiers::ALT => write!(f, "\u{2387}")?, //⎇
+            KeyModifiers::SUPER => write!(f, "\u{8862}")?, //⊞
+            KeyModifiers::HYPER => write!(f, "\u{7714}")?, // Ḣ
+            KeyModifiers::META => write!(f, "\u{7744}")?, // Ṁ
+            KeyModifiers::NONE => write!(f, "")?,
+            _ => write!(f, "?")?,
+        };
+        match self.code {
+            KeyCode::Char(c) => write!(f, "{}", c),
+            KeyCode::Backspace => write!(f, "\u{232b}"), //⌫
+            KeyCode::Enter => write!(f, "\u{23ce}"),     //⏎
+            KeyCode::Left => write!(f, "\u{2190}"),      //←
+            KeyCode::Right => write!(f, "\u{2192}"),     //→
+            KeyCode::Up => write!(f, "\u{2191}"),        //↑
+            KeyCode::Down => write!(f, "\u{2193}"),      //↓
+            KeyCode::Home => write!(f, "\u{2912}"),      //⤒
+            KeyCode::End => write!(f, "\u{2913}"),       //⤓
+            KeyCode::PageUp => write!(f, "\u{21de}"),    //⇞
+            KeyCode::PageDown => write!(f, "\u{21df}"),  //⇟
+            KeyCode::Tab => write!(f, "\u{21e5}"),       //⇥
+            KeyCode::BackTab => write!(f, "\u{21e4}"),   //⇤
+            KeyCode::Delete => write!(f, "\u{2326}"),    //⌦
+            KeyCode::Insert => write!(f, "\u{2380}"),    //⎀
+            KeyCode::F(n) => write!(f, "F{}", n),
+            KeyCode::Esc => write!(f, "\u{238b}"),          //⎋
+            KeyCode::CapsLock => write!(f, "\u{1F130}"),    //🄰
+            KeyCode::ScrollLock => write!(f, "\u{1F4DC}"),  //📜
+            KeyCode::NumLock => write!(f, "\u{2460}"),      //①
+            KeyCode::PrintScreen => write!(f, "\u{2399}"),  //⎙
+            KeyCode::Pause => write!(f, "\u{2BFF}"),        //⯿
+            KeyCode::Menu => write!(f, "\u{1F5C7}"),        //🗇
+            KeyCode::KeypadBegin => write!(f, "\u{1F5CA}"), //🗊
+            KeyCode::Media(MediaKeyCode::Play) => write!(f, "\u{23F5}"), //⏵
+            KeyCode::Media(MediaKeyCode::PlayPause) => write!(f, "\u{23EF}"), //⏯
+            KeyCode::Media(MediaKeyCode::Reverse) => write!(f, "\u{2B6F}"), //⭯
+            KeyCode::Media(MediaKeyCode::Stop) => write!(f, "\u{23F9}"), //⏹
+            KeyCode::Media(MediaKeyCode::FastForward) => write!(f, "\u{23ED}"), //⏭
+            KeyCode::Media(MediaKeyCode::Rewind) => write!(f, "\u{2B6E}"), //⭮
+            KeyCode::Media(MediaKeyCode::TrackNext) => write!(f, "\u{29D0}"), //⧐
+            KeyCode::Media(MediaKeyCode::TrackPrevious) => write!(f, "\u{29CF}"), //⧏
+            KeyCode::Media(MediaKeyCode::Record) => write!(f, "\u{241E}"), //␞
+            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "\u{1F569}"), //🕩
+            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "\u{1F56A}"), //🕪
+            KeyCode::Media(MediaKeyCode::MuteVolume) => write!(f, "\u{1F507}"), //🔇
+            _ => write!(f, "?"),
+        }
+    }
+}
+
 /// KeyBindings struct for key bind configure
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct KeyBindings(Vec<KeyBinding>);
@@ -227,6 +282,19 @@ impl KeyBindings {
             }
         }
         false
+    }
+}
+
+impl fmt::Display for KeyBindings {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for (i, kb) in self.0.iter().enumerate() {
+            if i > 0 {
+                write!(f, "/{}", kb)?; // Add delimiter
+            } else {
+                write!(f, "{}", kb)?;
+            }
+        }
+        Ok(())
     }
 }
 
@@ -284,11 +352,25 @@ mod tests {
     }
 
     #[test]
+    fn fmt_keybinding_config() {
+        let (t_with_modifiers, t, only_modifiers, t_with_esc) = keybinding_configs();
+
+        assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
+        assert_eq!(format!("{}", t_with_esc.kb), "⎋");
+    }
+
+    #[test]
     fn ser_keybindings_config() {
         let config = keybindings_config();
 
         let serialized = toml::to_string(&config).unwrap();
         assert_eq!(serialized, "kbs = [\"Control+c\", \"Q\"]\n");
+    }
+
+    #[test]
+    fn fmt_keybindings_config() {
+        let config = keybindings_config();
+        assert_eq!(format!("{}", config.kbs), "^c/Q");
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
