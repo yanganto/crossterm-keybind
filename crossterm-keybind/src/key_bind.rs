@@ -65,7 +65,7 @@ impl Serialize for KeyBinding {
 fn str_to_keycode(s: &str) -> KeyCode {
     // TODO: handle space
     if s.len() == 1 {
-        KeyCode::Char(s.chars().nth(0).unwrap())
+        KeyCode::Char(s.chars().next().unwrap())
     } else if s == "Backspace" {
         KeyCode::Backspace
     } else if s == "Enter" {
@@ -194,8 +194,7 @@ impl<'de> Deserialize<'de> for KeyBinding {
                     ));
                 }
                 let mut splitter = s.splitn(2, '+');
-                let key_code_str = splitter.nth(1).unwrap();
-                key_bindings.code = str_to_keycode(&key_code_str);
+                key_bindings.code = str_to_keycode(splitter.nth(1).unwrap());
             } else {
                 key_bindings.code = str_to_keycode(&s);
             }
