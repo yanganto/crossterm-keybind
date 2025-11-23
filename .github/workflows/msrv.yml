@@ -20,8 +20,3 @@ jobs:
       - name: Test msrv default feature
         run: |
           nix develop .#msrv -c cargo test
-
-      - name: Test msrv with crossterm_0_27
-        run: |
-          nix develop .#msrv -c cargo test --features=crossterm_0_27 --no-default-features
-

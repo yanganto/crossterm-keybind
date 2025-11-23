@@ -1,5 +1,3 @@
-#[cfg(feature = "crossterm_0_27")]
-use crossterm_0_27::event::{KeyCode, KeyModifiers, MediaKeyCode};
 #[cfg(feature = "crossterm_0_28_1")]
 use crossterm_0_28_1::event::{KeyCode, KeyModifiers, MediaKeyCode};
 

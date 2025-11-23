@@ -20,7 +20,3 @@ jobs:
       - name: Test default feature
         run: |
           nix develop -c cargo test
-
-      - name: Test with crossterm_0_27
-        run: |
-          nix develop -c cargo test --features=crossterm_0_27 --no-default-features
