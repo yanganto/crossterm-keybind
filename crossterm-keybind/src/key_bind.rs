@@ -6,6 +6,7 @@ use std::fmt;
 
 #[derive(PartialEq)]
 pub struct KeyBinding {
+    // TODO: Where is Space
     pub code: KeyCode,
     pub modifiers: KeyModifiers,
 }
@@ -63,7 +64,7 @@ impl Serialize for KeyBinding {
 }
 
 fn str_to_keycode(s: &str) -> KeyCode {
-    // TODO: handle space
+    // TODO: handle space and trim inputs
     if s.len() == 1 {
         KeyCode::Char(s.chars().next().unwrap())
     } else if s == "Backspace" {
@@ -215,15 +216,18 @@ impl<'de> Deserialize<'de> for KeyBinding {
     }
 }
 
+// ref: http://xahlee.info/comp/unicode_computing_symbols.html
+// TODO add FormattingOptions for different layout,
+// ex: Canadian Multilingual Layout, Truly Ergonomic Keyboard
 impl fmt::Display for KeyBinding {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.modifiers {
             KeyModifiers::SHIFT => write!(f, "\u{21e7}")?, //⇧
             KeyModifiers::CONTROL => write!(f, "^")?,
             KeyModifiers::ALT => write!(f, "\u{2387}")?, //⎇
-            KeyModifiers::SUPER => write!(f, "\u{8862}")?, //⊞
-            KeyModifiers::HYPER => write!(f, "\u{7714}")?, // Ḣ
-            KeyModifiers::META => write!(f, "\u{7744}")?, // Ṁ
+            KeyModifiers::SUPER => write!(f, "\u{2756}")?, //❖
+            KeyModifiers::HYPER => write!(f, "\u{2388}")?, //⎈
+            KeyModifiers::META => write!(f, "\u{2318}")?, //⌘
             KeyModifiers::NONE => write!(f, "")?,
             _ => write!(f, "?")?,
         };
@@ -249,7 +253,7 @@ impl fmt::Display for KeyBinding {
             KeyCode::ScrollLock => write!(f, "\u{1F4DC}"),  //📜
             KeyCode::NumLock => write!(f, "\u{2460}"),      //①
             KeyCode::PrintScreen => write!(f, "\u{2399}"),  //⎙
-            KeyCode::Pause => write!(f, "\u{2BFF}"),        //⯿
+            KeyCode::Pause => write!(f, "\u{2389}"),        //⎉
             KeyCode::Menu => write!(f, "\u{1F5C7}"),        //🗇
             KeyCode::KeypadBegin => write!(f, "\u{1F5CA}"), //🗊
             KeyCode::Media(MediaKeyCode::Play) => write!(f, "\u{23F5}"), //⏵
@@ -261,8 +265,8 @@ impl fmt::Display for KeyBinding {
             KeyCode::Media(MediaKeyCode::TrackNext) => write!(f, "\u{29D0}"), //⧐
             KeyCode::Media(MediaKeyCode::TrackPrevious) => write!(f, "\u{29CF}"), //⧏
             KeyCode::Media(MediaKeyCode::Record) => write!(f, "\u{241E}"), //␞
-            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "\u{1F569}"), //🕩
-            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "\u{1F56A}"), //🕪
+            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "\u{1F508}"), //🔈
+            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "\u{1F50A}"), //🔊
             KeyCode::Media(MediaKeyCode::MuteVolume) => write!(f, "\u{1F507}"), //🔇
             _ => write!(f, "?"),
         }
@@ -289,7 +293,7 @@ impl fmt::Display for KeyBindings {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for (i, kb) in self.0.iter().enumerate() {
             if i > 0 {
-                write!(f, "/{}", kb)?; // Add delimiter
+                write!(f, "|{}", kb)?; // Add delimiter
             } else {
                 write!(f, "{}", kb)?;
             }
@@ -353,7 +357,7 @@ mod tests {
 
     #[test]
     fn fmt_keybinding_config() {
-        let (t_with_modifiers, t, only_modifiers, t_with_esc) = keybinding_configs();
+        let (t_with_modifiers, _t, _only_modifiers, t_with_esc) = keybinding_configs();
 
         assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
         assert_eq!(format!("{}", t_with_esc.kb), "⎋");
@@ -370,7 +374,7 @@ mod tests {
     #[test]
     fn fmt_keybindings_config() {
         let config = keybindings_config();
-        assert_eq!(format!("{}", config.kbs), "^c/Q");
+        assert_eq!(format!("{}", config.kbs), "^c|Q");
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
