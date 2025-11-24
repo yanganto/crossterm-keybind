@@ -30,7 +30,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "crossterm",
  "crossterm-keybind-derive",
@@ -40,7 +40,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-derive"
-version = "0.0.0"
+version = "0.0.1"
 
 [[package]]
 name = "equivalent"
