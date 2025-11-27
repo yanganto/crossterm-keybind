@@ -67,7 +67,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "crossterm",
  "crossterm-keybind-derive",
@@ -80,7 +80,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-derive"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -155,7 +155,7 @@ dependencies = [
 
 [[package]]
 name = "example"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "crossterm-keybind",
  "ratatui",
