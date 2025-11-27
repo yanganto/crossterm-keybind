@@ -3,7 +3,6 @@
 [![MIT licensed][mit-badge]][mit-url]
 [![Docs][doc-badge]][doc-url]
 
-
 This crate help you build tui with keybings config in an easy way.
 
 When building a tui application, we need address following topics.
@@ -56,3 +55,10 @@ If the project does not dependent on the latest `ratatui` or `crossterm`, you ca
 ```toml
 crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_28_1", "derive"] } # work with ratatui 0.28.1
 ```
+
+[crates-badge]: https://img.shields.io/crates/v/crossterm-keybind.svg
+[crate-url]: https://crates.io/crates/crossterm-keybind
+[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[mit-url]: https://github.com/yanganto/crossterm-keybind/blob/readme/LICENSE
+[doc-badge]: https://img.shields.io/badge/docs-rs-orange.svg
+[doc-url]: https://docs.rs/crossterm-keybind/latest/crossterm_keybind/
