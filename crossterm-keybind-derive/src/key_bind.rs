@@ -103,21 +103,20 @@ impl Events {
                 static mut #uppers: core::mem::MaybeUninit<crossterm_keybind::KeyBindings> = core::mem::MaybeUninit::uninit();
             )*
 
-            impl #name {
-                /// load key binding config and patch
-                pub fn load(patch_path: Option<std::path::PathBuf>) {
+            impl crossterm_keybind::KeyBindTrait for #name {
+                fn init_and_load(patch_path: Option<std::path::PathBuf>) -> Result<(), crossterm_keybind::Error>{
                     if BINDING_INIT.load(std::sync::atomic::Ordering::Relaxed) {
-                        panic!("Key binding config is already loaded")
+                        return Err(crossterm_keybind::Error::ConfigDoubleInitError);
                     } else {
                         BINDING_INIT.store(true, std::sync::atomic::Ordering::Release);
                     }
 
                     let mut key_config: DefaultBinding =
-                        toml::from_str(&DefaultBinding::toml_example()).unwrap();
+                        toml::from_str(&DefaultBinding::toml_example()).map_err(|e|crossterm_keybind::Error::DefaultConfigError(e.to_string()))?;
                     if let Some(p) = patch_path {
-                        let contents = std::fs::read_to_string(p).expect("key config file absent");
+                        let contents = std::fs::read_to_string(p).map_err(crossterm_keybind::Error::ReadConfigError)?;
                         let patch: KeyBinding =
-                            toml::from_str(&contents).expect("key config file format incorrect");
+                            toml::from_str(&contents).map_err(crossterm_keybind::Error::LoadConfigError)?;
                         key_config.apply(patch);
                     }
 
@@ -126,12 +125,14 @@ impl Events {
                             #uppers = core::mem::MaybeUninit::new(key_config.#lowers);
                         )*
                     }
+
+                    Ok(())
                 }
 
-                /// Key event match for the key binding
-                pub fn match_any(&self, key_event: &crossterm_keybind::event::KeyEvent) -> bool {
+                fn match_any(&self, key_event: &crossterm_keybind::event::KeyEvent) -> bool {
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        panic!("Key binding config is not loaded")
+                        // TODO deubg message here?
+                        return false;
                     }
                     use #name as E;
                     match self {
@@ -141,13 +142,11 @@ impl Events {
                     }
                 }
 
-                /// Key config example for events
-                pub fn config_example() -> String {
+                fn config_example() -> String {
                     DefaultBinding::toml_example()
                 }
 
-                /// Key bindings display
-                pub fn key_bindings_display(&self) -> String {
+                fn key_bindings_display(&self) -> String {
                     use #name as E;
                     match self {
                         #(
