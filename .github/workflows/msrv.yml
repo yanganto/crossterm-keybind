@@ -24,3 +24,7 @@ jobs:
       - name: Test msrv derive feature
         run: |
           nix develop .#msrv -c cargo test --features=derive
+
+      - name: Run example with ratatui
+        run: |
+          nix develop -c cargo run

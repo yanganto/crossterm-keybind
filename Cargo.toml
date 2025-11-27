@@ -2,7 +2,8 @@
 resolver = "2"
 members = [
     "crossterm-keybind",
-    "crossterm-keybind-derive",
+    "crossterm-keybind-derive", 
+    "example",
 ]
 
 [workspace.package]
