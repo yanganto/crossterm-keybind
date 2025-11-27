@@ -7,8 +7,8 @@ This crate help you build tui with keybings config in an easy way.
 
 When building a tui application, we need address following topics.
 - `Define a set of keybing for some events`
-- `Capture one key bindings and perform one the event`
-- `Display the prompt of key bindings`
+- `Capture one/some key bindings and perform one the event`
+- `Display a prompt of a key binding`
 - `Provide a config file and let user to change all or part of it`
 
 These topics can be abstract these into a trait, and the key binding serialize and deserialize to a
