@@ -116,7 +116,7 @@ impl Events {
                     if let Some(p) = patch_path {
                         let contents = std::fs::read_to_string(p).map_err(crossterm_keybind::Error::ReadConfigError)?;
                         let patch: KeyBinding =
-                            toml::from_str(&contents).map_err(crossterm_keybind::Error::LoadConfigError)?;
+                            toml::from_str(&contents).map_err(|e|crossterm_keybind::Error::LoadConfigError(e.to_string()))?;
                         key_config.apply(patch);
                     }
 

@@ -7,5 +7,5 @@ pub enum Error {
     #[error("can not read keybind config")]
     ReadConfigError(#[from] std::io::Error),
     #[error("can not load keybind config")]
-    LoadConfigError(#[from] toml::de::Error),
+    LoadConfigError(String),
 }

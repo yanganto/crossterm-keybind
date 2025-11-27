@@ -17,6 +17,10 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test msrv default feature
+      - name: Test msrv
         run: |
           nix develop .#msrv -c cargo test
+
+      - name: Test msrv derive feature
+        run: |
+          nix develop .#msrv -c cargo test --features=derive
