@@ -2,18 +2,19 @@
 resolver = "2"
 members = [
     "crossterm-keybind",
-    "crossterm-keybind-derive",
+    "crossterm-keybind-derive", 
+    "example",
 ]
 
 [workspace.package]
-version = "0.0.2"
+version = "0.1.0"
 edition = "2024"
 authors = ["Antonio Yang <yanganto@gmail.com>"]
 description = "A crossplatform terminal library for keybinds"
 repository = "https://github.com/yanganto/crossterm-keybind"
 documentation = "https://docs.rs/crossterm-keybind/"
 license = "MIT"
-keywords = ["event", "keybind", "cli", "input", "terminal"]
+keywords = ["event", "keybind", "tui", "crossterm", "ratatui"]
 readme = "README.md"
 rust-version = "1.85.0"  # 2024 edition
 categories = ["command-line-interface", "command-line-utilities"]

@@ -1,0 +1,18 @@
+[package]
+name = "example"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+documentation.workspace = true
+license.workspace = true
+keywords.workspace = true
+readme.workspace = true
+rust-version.workspace = true
+categories.workspace = true
+
+[dependencies]
+ratatui = "0.29.0"
+crossterm-keybind = { version = "=0.1.0", path = "../crossterm-keybind", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
