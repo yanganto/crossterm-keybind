@@ -1,3 +1,18 @@
+//! This crate help you build tui with keybings config in an easy way.
+//! When building a tui application, we need address following topics.
+//! - `Define a set of keybing for some events`
+//! - `Capture one key bindings and perform one the event`
+//! - `Display the prompt of key bindings`
+//! - `Provide a config file and let user to change all or part of it`
+//!
+//! These topics can be abstract these into [`KeyBindTrait`], and the key binding serialize and deserialize
+//! to a config file are solved in this crate.
+//!
+//! There still are a lot of trivial works, ahead you and your great ideal to build tui application.
+//! This crate also provides derive macro [KeyBind](https://docs.rs/crossterm-keybind-derive/latest/crossterm_keybind_derive/derive.KeyBind.html)
+//! to generate the the keyconfig in a supper easy way, you can have a toml key config for your
+//! events and allow user to patch part of it.
+
 mod error;
 mod key_bind;
 mod traits;

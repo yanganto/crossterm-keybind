@@ -10,4 +10,7 @@ pub trait KeyBindTrait {
 
     /// Key bindings display
     fn key_bindings_display(&self) -> String;
+
+    // TODO Key bindings display with formatter
+    // fn key_bindings_display_with_format(&self, fmt: _) -> String;
 }
