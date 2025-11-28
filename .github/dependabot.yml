@@ -8,3 +8,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/crossterm-keybind"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/crossterm-keybind-derive"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/example"
+    schedule:
+      interval: "weekly"

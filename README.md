@@ -46,8 +46,8 @@ pub enum KeyEvent {
 ```
 
 You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
-The config can be initialized and customized by `KeyEvent::init_and_load(cli.key_config)`,
 Besides, you can easy to provide a key bind config by `KeyEvent::config_example()`.
+Then the config can be initialized and customized by `KeyEvent::init_and_load(cli.key_config)`.
 Please check the [example](./example) or a working example with [termshark](https://github.com/PRO-2684/termshark/pull/1).
 
 ### Dependency
