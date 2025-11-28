@@ -12,22 +12,28 @@ pub enum KeyEvent {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Init keybind coonfig with some user's file
+    // Init keybind config from a file path,
+    // The file can be customized from `"{}", KeyEvent::config_example()`
     KeyEvent::init_and_load(None)?;
 
     //  Following code will somewhere in your event handler
-    //  if ratatui::crossterm::event::poll() {
-    //      if let Event::Key(key) = evt {
-    //          if Quit.match_any(&key) {
-    //              Close the app
-    //          }
+    //  ```rust
+    //  let evt = ratatui::crossterm::event::read()?;
+    //  if let Event::Key(key) = evt {
+    //      if Quit.match_any(&key) {
+    //          // Close the app
     //      }
     //  }
+    //  ```
 
     // Display the keybind in your ui layer
-    println!("{}", KeyEvent::Quit.key_bindings_display());
+    println!(
+        "You can trigger Quit by {}",
+        KeyEvent::Quit.key_bindings_display()
+    );
 
     // Show the key bind config to your user
+    println!("## Following is the example for keybinds");
     println!("{}", KeyEvent::config_example());
 
     Ok(())
