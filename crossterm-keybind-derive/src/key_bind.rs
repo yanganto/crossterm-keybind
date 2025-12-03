@@ -1,10 +1,10 @@
 use proc_macro::{Span, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{DeriveInput, Error, Fields, Ident, Meta, Result, Variant};
+use syn::{Attribute, DeriveInput, Error, Fields, Ident, Meta, Result, Variant};
 
 struct Event {
     name: Ident,
-    attrs: Vec<syn::Attribute>,
+    attrs: Vec<Attribute>,
     // TODO use KeyBindings, and verify
     default_keybindings: String,
 }
@@ -50,6 +50,7 @@ impl Event {
 }
 
 pub(crate) struct Events {
+    attrs: Vec<Attribute>,
     name: Ident,
     inner: Vec<Event>,
 }
@@ -57,7 +58,7 @@ pub(crate) struct Events {
 impl Events {
     /// Generate the token stream for the patch struct and it resulting implementations
     pub fn into_token_stream(self) -> Result<TokenStream> {
-        let Events { name, inner } = self;
+        let Events { name, inner, attrs: enum_attrs } = self;
         let mut fields = Vec::new();
         let mut lowers = Vec::new();
         let mut uppers = Vec::new();
@@ -87,6 +88,9 @@ impl Events {
             use crossterm_keybind::struct_patch::Patch;
             use crossterm_keybind::toml;
 
+            #(
+                #enum_attrs
+            )*
             #[derive(crossterm_keybind::struct_patch::Patch, crossterm_keybind::toml_example::TomlExample, serde::Deserialize)]
             #[patch(name = "KeyBinding")]
             #[patch(attribute(derive(serde::Deserialize)))]
@@ -159,7 +163,7 @@ impl Events {
         }.into())
     }
     /// Parse enum to Events
-    pub fn from_ast(DeriveInput { ident, data, .. }: DeriveInput) -> Result<Events> {
+    pub fn from_ast(DeriveInput { ident, data, attrs, .. }: DeriveInput) -> Result<Events> {
         let syn::Data::Enum(syn::DataEnum { variants, .. }) = data else {
             return Err(syn::Error::new(
                 ident.span(),
@@ -172,6 +176,6 @@ impl Events {
             inner.push(Event::from_variant(v)?);
         }
 
-        Ok(Events { name: ident, inner })
+        Ok(Events { name: ident, inner, attrs })
     }
 }
