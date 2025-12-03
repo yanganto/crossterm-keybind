@@ -1,6 +1,7 @@
 use crossterm_keybind::KeyBind;
 use crossterm_keybind::KeyBindTrait;
 
+/// Following are the keybindings to trigger event to control application.
 #[derive(KeyBind)]
 pub enum KeyEvent {
     /// The app will be closed with following key bindings
@@ -26,14 +27,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //  }
     //  ```
 
+    println!("--- Following are keybinds displays ---");
     // Display the keybind in your ui layer
     println!(
         "You can trigger Quit by {}",
         KeyEvent::Quit.key_bindings_display()
     );
+    println!();
 
     // Show the key bind config to your user
-    println!("## Following is the example for keybinds");
+    println!("--- Following is the example config for keybinds ---");
     println!("{}", KeyEvent::config_example());
 
     Ok(())

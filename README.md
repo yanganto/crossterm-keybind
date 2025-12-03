@@ -1,4 +1,4 @@
-# Crossterm Keybind
+z# Crossterm Keybind
 [![Crates.io][crates-badge]][crate-url]
 [![MIT licensed][mit-badge]][mit-url]
 [![Docs][doc-badge]][doc-url]
@@ -52,11 +52,13 @@ You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bi
 Besides, you can easy to provide a key bind config by `KeyEvent::config_example()` as following.
 
 ```toml
+# Following are the keybindings to trigger event to control application
 # The app will be closed with following key bindings
 # - combin key Control and c
 # - single key Q
 # - single key q
 quit = ["Control+c", "Q", "q"]
+
 ```
 
 Then, user can customized the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
