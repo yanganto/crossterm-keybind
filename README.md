@@ -39,15 +39,27 @@ use crossterm_keybind::KeyBind;
 
 #[derive(KeyBind)]
 pub enum KeyEvent {
-    /// Close the application
+    /// The app will be closed with following key bindings
+    /// - combin key Control and c
+    /// - single key Q
+    /// - single key q
     #[keybindings["Control+c", "Q", "q"]]
     Quit,
 }
 ```
 
 You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
-Besides, you can easy to provide a key bind config by `KeyEvent::config_example()`.
-Then the config can be initialized and customized by `KeyEvent::init_and_load(cli.key_config)`.
+Besides, you can easy to provide a key bind config by `KeyEvent::config_example()` as following.
+
+```toml
+# The app will be closed with following key bindings
+# - combin key Control and c
+# - single key Q
+# - single key q
+quit = ["Control+c", "Q", "q"]
+```
+
+Then, user can customized the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
 Please check the [example](./example) or a working example with [termshark](https://github.com/PRO-2684/termshark/pull/1).
 
 ### Dependency
