@@ -37,7 +37,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Show the key bind config to your user
     println!("--- Following is the example config for keybinds ---");
-    println!("{}", KeyEvent::config_example());
+    println!("{}", KeyEvent::toml_example());
 
     Ok(())
 }

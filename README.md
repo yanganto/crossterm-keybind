@@ -18,7 +18,7 @@ config file are solved in this crate.
 pub trait KeyBindTrait {
     fn init_and_load(patch_path: Option<PathBuf>) -> Result<(), Error>;
     fn match_any(&self, key_event: &KeyEvent) -> bool;
-    fn config_example() -> String;
+    fn toml_example() -> String;
     fn to_toml_example<P: AsRef<Path>>(file_name: P) -> std::io::Result<()>;
     fn key_bindings_display(&self) -> String;
 }
@@ -50,7 +50,7 @@ pub enum KeyEvent {
 ```
 
 You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
-Besides, you can easy to provide a key bind config by `KeyEvent::config_example()` or `KeyEvent::to_toml_example(path)` as following.
+Besides, you can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
 
 ```toml
 # Following are the keybindings to trigger event to control application
