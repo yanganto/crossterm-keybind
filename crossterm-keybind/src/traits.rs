@@ -8,6 +8,9 @@ pub trait KeyBindTrait {
     /// Key config example for events
     fn config_example() -> String;
 
+    /// Export a file with key config example for events
+    fn to_toml_example<P: AsRef<std::path::Path>>(file_name: P) -> std::io::Result<()>;
+
     /// Key bindings display
     fn key_bindings_display(&self) -> String;
 
