@@ -41,7 +41,7 @@ impl Event {
                 if let Err(e) = serde_json::from_str::<crossterm_keybind_core::KeyBindings>(&default_keybindings_str) {
                     return Err(Error::new(
                         ident.span(),
-                        format!("{} Keybing check fail: {}", ident, e),
+                        format!("{} Keybinding check fail: {}", ident, e),
                     ));
                 }
                 
