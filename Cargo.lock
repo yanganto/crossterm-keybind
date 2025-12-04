@@ -70,8 +70,8 @@ name = "crossterm-keybind"
 version = "0.1.4"
 dependencies = [
  "crossterm",
+ "crossterm-keybind-core",
  "crossterm-keybind-derive",
- "serde",
  "struct-patch",
  "thiserror",
  "toml",
@@ -79,11 +79,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "crossterm-keybind-core"
+version = "0.1.4"
+dependencies = [
+ "crossterm",
+ "serde",
+ "toml",
+]
+
+[[package]]
 name = "crossterm-keybind-derive"
 version = "0.1.4"
 dependencies = [
+ "crossterm-keybind-core",
  "proc-macro2",
  "quote",
+ "serde_json",
  "syn",
 ]
 
@@ -287,6 +298,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "memchr"
+version = "2.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273"
+
+[[package]]
 name = "mio"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -456,6 +473,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_json"
+version = "1.0.145"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "402a6f66d8c709116cf22f558eab210f5a50187f702eb4d7e5ef38d9a7f1c79c"
+dependencies = [
+ "itoa",
+ "memchr",
+ "ryu",
+ "serde",
+ "serde_core",
 ]
 
 [[package]]
