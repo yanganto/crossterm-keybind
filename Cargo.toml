@@ -2,12 +2,13 @@
 resolver = "2"
 members = [
     "crossterm-keybind",
+    "crossterm-keybind-core",
     "crossterm-keybind-derive", 
     "example",
 ]
 
 [workspace.package]
-version = "0.1.4"
+version = "0.1.5"
 edition = "2024"
 authors = ["Antonio Yang <yanganto@gmail.com>"]
 description = "A crossplatform terminal library for keybinds"

@@ -64,7 +64,7 @@ impl Serialize for KeyBinding {
 }
 
 fn str_to_keycode(s: &str) -> KeyCode {
-    // TODO: handle space and trim inputs
+    let s = s.trim();
     if s.len() == 1 {
         KeyCode::Char(s.chars().next().unwrap())
     } else if s == "Backspace" {
@@ -204,7 +204,7 @@ impl<'de> Deserialize<'de> for KeyBinding {
             Err(e)
         } else if key_bindings.code == KeyCode::Null {
             Err(de::Error::custom(
-                r#"Can not load KeyCode, please use chars and following key
+                r#"Can not load a KeyCode, please use a char or one of following KeyCodes:
 "Backspace", "Enter", "Left", "Right", "Up", "Down", "Home", "End", "PageUp", "PageDown", "Tab", "BackTab", "Delete",
 "Insert", "F1" ~ "F12", "Esc", "CapsLock", "ScrollLock", "NumLock", "PrintScreen", "Pause", "Menu", "KeypadBegin",
 "Play", "PlayPause", "Reverse", "Stop", "FastForward", "Rewind", "TrackNext", "TrackPrevious", "Record", "LowerVolume", 

@@ -14,7 +14,6 @@
 //! events and allow user to patch part of it.
 
 mod error;
-mod key_bind;
 mod traits;
 
 #[cfg(feature = "crossterm_0_28_1")]
@@ -30,4 +29,4 @@ pub use toml;
 pub use toml_example;
 pub use traits::KeyBindTrait;
 
-pub use key_bind::{KeyBinding, KeyBindings};
+pub use crossterm_keybind_core::{KeyBinding, KeyBindings};

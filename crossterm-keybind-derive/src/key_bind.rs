@@ -5,7 +5,6 @@ use syn::{Attribute, DeriveInput, Error, Fields, Ident, Meta, Result, Variant};
 struct Event {
     name: Ident,
     attrs: Vec<Attribute>,
-    // TODO use KeyBindings, and verify
     default_keybindings: String,
 }
 
@@ -34,9 +33,19 @@ impl Event {
                         "Keybindings is incorrect, for example correct format is #[keybings[\"Control+c\",\"Q\"]]",
                     ));
                 };
-                default_keybindings = format!("{}", meta_list.to_token_stream())[11..]
+                let default_keybindings_str = format!("{}", meta_list.to_token_stream())[11..]
                     .trim()
                     .to_string();
+
+                #[cfg(feature = "check")]
+                if let Err(e) = serde_json::from_str::<crossterm_keybind_core::KeyBindings>(&default_keybindings_str) {
+                    return Err(Error::new(
+                        ident.span(),
+                        format!("{} Keybinding check fail: {}", ident, e),
+                    ));
+                }
+                
+                default_keybindings = default_keybindings_str;
             } else {
                 new_attrs.push(attr)
             }
