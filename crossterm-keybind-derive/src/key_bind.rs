@@ -146,7 +146,7 @@ impl Events {
                     }
                 }
 
-                fn config_example() -> String {
+                fn toml_example() -> String {
                     DefaultBinding::toml_example()
                 }
 
