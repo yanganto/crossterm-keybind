@@ -150,6 +150,10 @@ impl Events {
                     DefaultBinding::toml_example()
                 }
 
+                fn to_toml_example<P: AsRef<std::path::Path>>(file_name: P) -> std::io::Result<()> {
+                    DefaultBinding::to_toml_example(file_name)
+                }
+
                 fn key_bindings_display(&self) -> String {
                     use #name as E;
                     match self {
