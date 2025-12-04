@@ -1,4 +1,4 @@
-z# Crossterm Keybind
+# Crossterm Keybind
 [![Crates.io][crates-badge]][crate-url]
 [![MIT licensed][mit-badge]][mit-url]
 [![Docs][doc-badge]][doc-url]
