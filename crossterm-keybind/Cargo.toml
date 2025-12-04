@@ -18,7 +18,7 @@ ratatui_0_29_0 = ["dep:crossterm_0_28_1","crossterm-keybind-core/crossterm_0_28_
 ratatui_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 crossterm_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive"]
-# check the default keybing format when compling
+# check the default keybinding format when compiling
 check = ["crossterm-keybind-derive/check"]
 
 [dependencies]
