@@ -4,12 +4,17 @@ use crossterm_keybind::KeyBindTrait;
 /// Following are the keybindings to trigger event to control application.
 #[derive(KeyBind)]
 pub enum KeyEvent {
+
     /// The app will be closed with following key bindings
     /// - combin key Control and c
     /// - single key Q
     /// - single key q
     #[keybindings["Control+c", "Q", "q"]]
     Quit,
+
+    /// A toogle to open/close a widget show all the commands
+    #[keybindings["F1", "?"]]
+    ToggleHelpWidget,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
