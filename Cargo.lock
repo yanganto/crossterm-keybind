@@ -50,6 +50,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "convert_case"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "633458d4ef8c78b72454de2d54fd6ab2e60f9e02be22f3c6104cdc8a4e0fceb9"
+dependencies = [
+ "unicode-segmentation",
+]
+
+[[package]]
 name = "crossterm"
 version = "0.28.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -67,7 +76,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "crossterm",
  "crossterm-keybind-core",
@@ -80,7 +89,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-core"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "crossterm",
  "serde",
@@ -89,8 +98,9 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-derive"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
+ "convert_case",
  "crossterm-keybind-core",
  "proc-macro2",
  "quote",
@@ -166,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "example"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "crossterm-keybind",
  "ratatui",

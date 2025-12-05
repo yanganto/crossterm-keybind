@@ -16,12 +16,13 @@ rust-version.workspace = true
 proc-macro = true
 
 [dependencies]
-crossterm-keybind-core  = { version = "=0.1.5", path = "../crossterm-keybind-core", optional = true }
+crossterm-keybind-core  = { version = "=0.1.6", path = "../crossterm-keybind-core", optional = true }
 
 syn = { version = "2.0", features = ["parsing", "extra-traits"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 serde_json = { version = "1.0", optional = true }
+convert_case = "0.10.0"
 
 [features]
 default = ["crossterm_0_28_1", "check"]

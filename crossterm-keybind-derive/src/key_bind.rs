@@ -2,6 +2,7 @@ use proc_macro::{Span, TokenStream};
 use quote::{quote, ToTokens};
 use syn::{Attribute, DeriveInput, Error, Fields, Ident, Meta, Result, Variant};
 
+
 struct Event {
     name: Ident,
     attrs: Vec<Attribute>,
@@ -67,6 +68,8 @@ pub(crate) struct Events {
 impl Events {
     /// Generate the token stream for the patch struct and it resulting implementations
     pub fn into_token_stream(self) -> Result<TokenStream> {
+        use convert_case::{Case, Casing};
+
         let Events { name, inner, attrs: enum_attrs } = self;
         let mut fields = Vec::new();
         let mut lowers = Vec::new();
@@ -78,11 +81,11 @@ impl Events {
             let name = e.name.to_string();
             fields.push(syn::Ident::new(&name, Span::call_site().into()));
             lowers.push(syn::Ident::new(
-                &name.to_lowercase(),
+                &name.from_case(Case::UpperCamel).to_case(Case::Snake),
                 Span::call_site().into(),
             ));
             uppers.push(syn::Ident::new(
-                &name.to_uppercase(),
+                &name.from_case(Case::UpperCamel).to_case(Case::Constant),
                 Span::call_site().into(),
             ));
             attrs.push(e.attrs);

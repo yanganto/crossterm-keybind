@@ -22,8 +22,8 @@ derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive"]
 check = ["crossterm-keybind-derive/check"]
 
 [dependencies]
-crossterm-keybind-core  = { version = "=0.1.5", path = "../crossterm-keybind-core" }
-crossterm-keybind-derive  = { version = "=0.1.5", path = "../crossterm-keybind-derive", optional = true }
+crossterm-keybind-core  = { version = "=0.1.6", path = "../crossterm-keybind-core" }
+crossterm-keybind-derive  = { version = "=0.1.6", path = "../crossterm-keybind-derive", optional = true }
 
 crossterm_0_28_1 = { package = "crossterm", version = "0.28.1", optional = true, default-features = false, features = ["events"]}
 toml = { version = "0.9.8", optional = true }
