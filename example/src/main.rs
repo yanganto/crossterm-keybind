@@ -12,7 +12,7 @@ pub enum KeyEvent {
     #[keybindings["Control+c", "Q", "q"]]
     Quit,
 
-    /// A toogle to open/close a widget show all the commands
+    /// A toggle to open/close a widget show all the commands
     #[keybindings["F1", "?"]]
     ToggleHelpWidget,
 }

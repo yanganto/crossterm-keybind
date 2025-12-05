@@ -47,7 +47,7 @@ pub enum KeyEvent {
     #[keybindings["Control+c", "Q", "q"]]
     Quit,
 
-    /// A toogle to open/close a widget show all the commands
+    /// A toggle to open/close a widget show all the commands
     #[keybindings["F1", "?"]]
     ToggleHelpWidget,
 }
@@ -64,7 +64,7 @@ Besides, you can easy to provide a key bind config by `KeyEvent::toml_example()`
 # - single key q
 quit = ["Control+c", "Q", "q"]
 
-# A toogle to open/close a widget show all the commands
+# A toggle to open/close a widget show all the commands
 toggle_help_widget = ["F1", "?"]
  
 ```
