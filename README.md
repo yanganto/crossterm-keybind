@@ -7,11 +7,11 @@ This crate help you build tui with keybindings config in an easy way.
 
 When building a tui application, we need address following topics.
 - `Define a set of keybinding for some events`
-- `Capture one/some keybindings and perform one the event`
-- `Display a prompt of a keybinding`
+- `Capture one/some keybindings and perform an event`
+- `Display a keybinding prompt of an event`
 - `Provide a config file and let user to change all or part of it`
 
-These topics can be abstract these into a trait, and the key binding serialize and deserialize to a
+These topics can be abstract into a trait, and the key binding serialize and deserialize to a
 config file are solved in this crate.
 
 ```rust
@@ -26,7 +26,7 @@ pub trait KeyBindTrait {
 
 However, there still are a lot of trivial works, ahead you and your great ideal to build tui application.
 So this crate also provides a macro help you to generate the the keyconfig in a supper easy way,
-you can have a toml key config for your events and allow user to patch part of it.
+you can have a toml file for your events and allow users patch part of it.
 Following code snippets help you set up.
 
 
@@ -57,7 +57,6 @@ You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bi
 Besides, you can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
 
 ```toml
-# Following are the keybindings to trigger event to control application
 # The app will be closed with following key bindings
 # - combin key Control and c
 # - single key Q
@@ -69,8 +68,8 @@ toggle_help_widget = ["F1", "?"]
  
 ```
 
-Then, user can customized the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
-Please check the [example](./example) or a working example with [termshark](https://github.com/PRO-2684/termshark/pull/1).
+Then, user can customize the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
+Please check the [example](./example) or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use with ratatui.
 
 ### Dependency
 If the project does not dependent on the latest `ratatui` or `crossterm`,
