@@ -26,7 +26,7 @@ pub trait KeyBindTrait {
 
 However, there still are a lot of trivial works, ahead you and your great ideal to build tui application.
 So this crate also provides a macro help you to generate the the keyconfig in a supper easy way,
-you can have a toml file for your events and allow users patch part of it.
+you can have a toml file for your events and allow users to patch part of it.
 Following code snippets help you set up.
 
 
