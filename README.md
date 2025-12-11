@@ -11,7 +11,7 @@ When building a tui application, we need address following topics.
 - `Display a keybinding prompt of an event`
 - `Provide a config file and let user to change all or part of it`
 
-These topics can be abstract into a trait, and the key binding serialize and deserialize to a
+These topics can be abstracted into a trait, and the key binding serialize and deserialize to a
 config file are solved in this crate.
 
 ```rust
