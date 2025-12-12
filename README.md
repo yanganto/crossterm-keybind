@@ -69,7 +69,7 @@ toggle_help_widget = ["F1", "?"]
 ```
 
 Then, users can customize the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
-Please check the [example](./example) or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use it with ratatui.
+Please check the [example](./example), [ratatui-template](https://github.com/ratatui/templates/pull/124)  or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use it with ratatui.
 
 ### Dependency
 If the project does not dependent on the latest `ratatui` or `crossterm`,
