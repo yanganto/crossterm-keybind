@@ -27,6 +27,9 @@ pub trait KeyBindTrait {
 However, there still are a lot of trivial works, ahead you and your great ideal to build tui application.
 So this crate also provides a macro help you to generate the the keyconfig in a supper easy way,
 you can have a toml file for your events and allow users to patch part of it.
+Because users can patch part of config, your application will be backward compatible, if there are
+only additions in the enum with KeyBind derive.
+
 Following code snippets help you set up.
 
 
@@ -69,7 +72,7 @@ toggle_help_widget = ["F1", "?"]
 ```
 
 Then, users can customize the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
-Please check the [example](./example), [ratatui-template](https://github.com/ratatui/templates/pull/124)  or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use it with ratatui.
+Please check the [Github Template](https://github.com/yanganto/ratatui-keybind-template), [example](./example), [ratatui-template](https://github.com/ratatui/templates/pull/124)  or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use it with ratatui.
 
 ### Dependency
 If the project does not dependent on the latest `ratatui` or `crossterm`,
