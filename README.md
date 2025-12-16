@@ -57,7 +57,7 @@ pub enum KeyEvent {
 }
 ```
 
-You can easy control by use `Quit.match_any(&key)` or match events from `KeyEvent::dispatch(&key)`,
+You can easily control by using `Quit.match_any(&key)` or match events from `KeyEvent::dispatch(&key)`,
 and also `Quit.key_bindings_display()` in the ui.
 Besides, you can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
 
