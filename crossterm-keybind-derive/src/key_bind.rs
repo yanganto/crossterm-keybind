@@ -182,7 +182,7 @@ impl Events {
                 fn dispatch(key_event: &crossterm_keybind::event::KeyEvent) -> Vec<Self> {
                     let mut output = Vec::new();
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // TODO deubg message here?
+                        // TODO debug message here?
                         return output;
                     }
                     #(
