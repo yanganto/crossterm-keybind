@@ -16,4 +16,9 @@ pub trait KeyBindTrait {
 
     // TODO Key bindings display with formatter
     // fn key_bindings_display_with_format(&self, fmt: _) -> String;
+
+    /// Dispatch events from the key bindings
+    fn dispatch(key_event: &crate::event::KeyEvent) -> Vec<Self>
+    where
+        Self: Sized;
 }

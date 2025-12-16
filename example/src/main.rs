@@ -4,7 +4,6 @@ use crossterm_keybind::KeyBindTrait;
 /// Following are the keybindings to trigger event to control application.
 #[derive(KeyBind)]
 pub enum KeyEvent {
-
     /// The app will be closed with following key bindings
     /// - combin key Control and c
     /// - single key Q
@@ -28,6 +27,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //  if let Event::Key(key) = evt {
     //      if Quit.match_any(&key) {
     //          // Close the app
+    //      }
+    //
+    //      for event in Event::dispatch(&key) {
+    //          match event {
+    //              Quit => {
+    //                  // Close the app
+    //              }
+    //          }
     //      }
     //  }
     //  ```

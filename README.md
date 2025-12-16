@@ -21,6 +21,7 @@ pub trait KeyBindTrait {
     fn toml_example() -> String;
     fn to_toml_example<P: AsRef<Path>>(file_name: P) -> std::io::Result<()>;
     fn key_bindings_display(&self) -> String;
+    fn dispatch(key_event: &crate::event::KeyEvent) -> Vec<Self>;
 }
 ```
 
@@ -56,7 +57,8 @@ pub enum KeyEvent {
 }
 ```
 
-You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
+You can easily control by using `Quit.match_any(&key)` or match events from `KeyEvent::dispatch(&key)`,
+and also `Quit.key_bindings_display()` in the ui.
 Besides, you can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
 
 ```toml

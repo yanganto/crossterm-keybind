@@ -2,7 +2,6 @@ use proc_macro::{Span, TokenStream};
 use quote::{quote, ToTokens};
 use syn::{Attribute, DeriveInput, Error, Fields, Ident, Meta, Result, Variant};
 
-
 struct Event {
     name: Ident,
     attrs: Vec<Attribute>,
@@ -39,13 +38,15 @@ impl Event {
                     .to_string();
 
                 #[cfg(feature = "check")]
-                if let Err(e) = serde_json::from_str::<crossterm_keybind_core::KeyBindings>(&default_keybindings_str) {
+                if let Err(e) = serde_json::from_str::<crossterm_keybind_core::KeyBindings>(
+                    &default_keybindings_str,
+                ) {
                     return Err(Error::new(
                         ident.span(),
                         format!("{} Keybinding check fail: {}", ident, e),
                     ));
                 }
-                
+
                 default_keybindings = default_keybindings_str;
             } else {
                 new_attrs.push(attr)
@@ -70,7 +71,11 @@ impl Events {
     pub fn into_token_stream(self) -> Result<TokenStream> {
         use convert_case::{Case, Casing};
 
-        let Events { name, inner, attrs: enum_attrs } = self;
+        let Events {
+            name,
+            inner,
+            attrs: enum_attrs,
+        } = self;
         let mut fields = Vec::new();
         let mut lowers = Vec::new();
         let mut uppers = Vec::new();
@@ -167,19 +172,36 @@ impl Events {
                 }
 
                 fn key_bindings_display(&self) -> String {
-                    use #name as E;
                     match self {
                         #(
-                            E::#fields => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
+                            #name::#fields => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
                         )*
                     }
+                }
+
+                fn dispatch(key_event: &crossterm_keybind::event::KeyEvent) -> Vec<Self> {
+                    let mut output = Vec::new();
+                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
+                        // TODO debug message here?
+                        return output;
+                    }
+                    #(
+                        if unsafe { (*(&raw mut #uppers)).assume_init_mut() }.match_any(key_event) {
+                            output.push(#name::#fields);
+                        }
+                    )*
+                    output
                 }
             }
 
         }.into())
     }
     /// Parse enum to Events
-    pub fn from_ast(DeriveInput { ident, data, attrs, .. }: DeriveInput) -> Result<Events> {
+    pub fn from_ast(
+        DeriveInput {
+            ident, data, attrs, ..
+        }: DeriveInput,
+    ) -> Result<Events> {
         let syn::Data::Enum(syn::DataEnum { variants, .. }) = data else {
             return Err(syn::Error::new(
                 ident.span(),
@@ -192,6 +214,10 @@ impl Events {
             inner.push(Event::from_variant(v)?);
         }
 
-        Ok(Events { name: ident, inner, attrs })
+        Ok(Events {
+            name: ident,
+            inner,
+            attrs,
+        })
     }
 }
