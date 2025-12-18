@@ -24,6 +24,7 @@ pub trait KeyBindTrait {
     fn toml_example() -> String;
     fn to_toml_example<P: AsRef<Path>>(file_name: P) -> std::io::Result<()>;
     fn key_bindings_display(&self) -> String;
+    fn dispatch(key_event: &crate::event::KeyEvent) -> Vec<Self>;
 }
 ```
 
