@@ -3,7 +3,7 @@
 [![MIT licensed][mit-badge]][mit-url]
 [![Docs][doc-badge]][doc-url]
 
-With growing userbases, developers of Terminal UI (TUI) apps often get requests for alternative
+With growing userbases, developers of Terminal UI (TUI)/ Graphic UI (GUI) apps often get requests for alternative
 keybinding schemes (like vim-style bindings or personalized shortcuts). Manually supporting such
 requests quickly becomes a maintenance burden, and as your app evolves, users expect their custom
 keybinds to remain compatible across updates. This crate helps you build tui with keybindings config in an easy way.
@@ -34,8 +34,7 @@ you can have a toml file for your events and allow users to patch part of it.
 Because users can patch part of config, your application will be backward compatible, if there are
 only additions in the enum with KeyBind derive.
 
-## Dive In
-### Core Pattern
+## Core Pattern
 We use an approach that defines all keybindings in _a single enum_.
 
 ```toml
@@ -61,7 +60,7 @@ pub enum KeyEvent {
 }
 ```
 
-#### How to capture user input
+### How to capture user input
 
 You can easily use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
 
@@ -89,7 +88,7 @@ for event in KeyBindEvent::dispatch(&key) {
 }
 ```
 
-#### How to provide the default config
+### How to provide the default config
 
 You can easily provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
 We also take care the config file documentation
@@ -107,7 +106,7 @@ toggle_help_widget = ["F1", "?"]
 ```
 Then, users can customize the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
 
-#### How can users customize their keybinds
+### How can users customize their keybinds
 
 We additionally take care of override issues using the struct-patch feature.
 
@@ -124,14 +123,14 @@ remain the same as the default, because the user did not customize them, so the 
 `F1` or `?` to open the widget. You also get the benefit of backward compatibility for key configs,
 if you only make additions to the key binding enum.
 
-### Dependency
+## Dependency
 If the project does not dependent on the latest `ratatui` or `crossterm`,
 you can specific the version of ratatui or the version of crossterm as features in following way.
 ```toml
 crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_28_1", "derive"] } # work with ratatui 0.28.1
 ```
 
-### Summary
+## Summary
 
 With these approaches, the following features are supported:
 
