@@ -74,7 +74,7 @@ if KeyBindEvent::Quit.match_any(&key) {
 }
 ```
 
-or use dispatch in a full comparing way to get all possilbe enum variants
+or use dispatch in a full comparing way to get all possible enum variants
 
 ```rust
 for event in KeyBindEvent::dispatch(&key) {
