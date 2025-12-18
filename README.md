@@ -3,7 +3,10 @@
 [![MIT licensed][mit-badge]][mit-url]
 [![Docs][doc-badge]][doc-url]
 
-This crate help you build tui with keybindings config in an easy way.
+With growing userbases, developers of Terminal UI (TUI) apps often get requests for alternative
+keybinding schemes (like vim-style bindings or personalized shortcuts). Manually supporting such
+requests quickly becomes a maintenance burden, and as your app evolves, users expect their custom
+keybinds to remain compatible across updates.  This crate help you build tui with keybindingsconfig in an easy way.
 
 When building a tui application, we need address following topics.
 - `Define a set of keybinding for some events`
@@ -30,8 +33,9 @@ you can have a toml file for your events and allow users to patch part of it.
 Because users can patch part of config, your application will be backward compatible, if there are
 only additions in the enum with KeyBind derive.
 
-Following code snippets help you set up.
-
+## Dive In
+### Core Pattern
+We use an approach that defines all keybindings in _a single enum_.
 
 ```toml
 crossterm-keybind = { version = "*", features = ["derive"] }
@@ -56,8 +60,38 @@ pub enum KeyEvent {
 }
 ```
 
+#### How to capture user input
+
 You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
-Besides, you can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
+
+In a less comparing way
+```rust
+if KeyBindEvent::Quit.match_any(&key) {
+  // Close the app
+} else if KeyBindEvent::ToggleHelpWidget.match_any(&key){
+  // Show documents
+}
+```
+
+or use dispatch in a full comparing way to get all possilbe enum variants
+
+```rust
+for event in KeyBindEvent::dispatch(&key) {
+  match event {
+    KeyBindEvent::Quit => {
+      // Close the app
+    },
+    KeyBindEvent::ToggleHelpWidget => {
+      // Show documents
+    },
+  }
+}
+```
+
+#### How to provide the default config
+
+You can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
+We also take care the config file documentation
 
 ```toml
 # The app will be closed with following key bindings
@@ -70,9 +104,27 @@ quit = ["Control+c", "Q", "q"]
 toggle_help_widget = ["F1", "?"]
  
 ```
-
 Then, users can customize the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
-Please check the [Github Template](https://github.com/yanganto/ratatui-keybind-template), [example](./example), [ratatui-template](https://github.com/ratatui/templates/pull/124)  or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use it with ratatui.
+
+#### How can users customize their keybinds
+
+We additionally takes care of override issues using the struct-patch feature.
+
+If the user only customized part of the key config, the system will patch the user's customized
+settings onto the default ones. You can learn this in detail with the following use case.
+
+```toml
+quit = ["Control+q"]
+```
+
+The config can be loaded successfully. After loading, only `Control+q` can quit the application, and
+the default keys `Control+c`, `Q`, `q` will not work anymore. The keybinds to open a widget will
+remain the same as the default, because the user did not customize them, so the user can still use
+`F1` or `?` to open the widget. You also get the benefit of backward compatibility for key configs,
+if you only make additions to the key binding enum.
+
+If the user only customized part of the key config, the system will patch the user's customized
+settings onto the default ones. You can learn this in detail with the following use case.
 
 ### Dependency
 If the project does not dependent on the latest `ratatui` or `crossterm`,
@@ -80,6 +132,24 @@ you can specific the version of ratatui or the version of crossterm as features 
 ```toml
 crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_28_1", "derive"] } # work with ratatui 0.28.1
 ```
+
+### Summary
+
+With these approaches, the following features are supported:
+
+Both crates support:
+
+- **User Customization:** Let users adapt the app to their muscle memory and workflows.
+- **Multiple Shortcuts:** Map several key combos to a single action.
+- **Better User Experience:** Power users and international users can adjust keyboard layouts.
+- **Backward Compatibility:** It can always be compatible with legacy configs, if we only make
+  additions to the Enum.
+- **Maintainability:** It is easy to keep a keybind config updated with the code.
+- **Better Developer Experience:** Easy to setup default keybindings.
+- **Flexible Keybindings:** It is possible to trigger multiple enum variants from one keybinding.
+
+Please check the [Github Template](https://github.com/yanganto/ratatui-keybind-template), [example](./example), [ratatui-template](https://github.com/ratatui/templates/pull/124)  or a working PR with [termshark](https://github.com/PRO-2684/termshark/pull/1) to learn how to use it with ratatui.
+
 
 [crates-badge]: https://img.shields.io/crates/v/crossterm-keybind.svg
 [crate-url]: https://crates.io/crates/crossterm-keybind
