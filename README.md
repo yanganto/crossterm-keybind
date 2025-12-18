@@ -109,7 +109,7 @@ Then, users can customize the key as they need and the config can be initialized
 
 #### How can users customize their keybinds
 
-We additionally takes care of override issues using the struct-patch feature.
+We additionally take care of override issues using the struct-patch feature.
 
 If the user only customized part of the key config, the system will patch the user's customized
 settings onto the default ones. You can learn this in detail with the following use case.
