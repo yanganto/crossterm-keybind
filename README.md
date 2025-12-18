@@ -91,7 +91,7 @@ for event in KeyBindEvent::dispatch(&key) {
 
 #### How to provide the default config
 
-You can easy to provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
+You can easily provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
 We also take care the config file documentation
 
 ```toml
@@ -123,9 +123,6 @@ the default keys `Control+c`, `Q`, `q` will not work anymore. The keybinds to op
 remain the same as the default, because the user did not customize them, so the user can still use
 `F1` or `?` to open the widget. You also get the benefit of backward compatibility for key configs,
 if you only make additions to the key binding enum.
-
-If the user only customized part of the key config, the system will patch the user's customized
-settings onto the default ones. You can learn this in detail with the following use case.
 
 ### Dependency
 If the project does not dependent on the latest `ratatui` or `crossterm`,
