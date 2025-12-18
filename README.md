@@ -63,7 +63,7 @@ pub enum KeyEvent {
 
 #### How to capture user input
 
-You can easy to use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
+You can easily use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
 
 In a less comparing way
 ```rust
