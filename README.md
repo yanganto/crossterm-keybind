@@ -6,7 +6,7 @@
 With growing userbases, developers of Terminal UI (TUI) apps often get requests for alternative
 keybinding schemes (like vim-style bindings or personalized shortcuts). Manually supporting such
 requests quickly becomes a maintenance burden, and as your app evolves, users expect their custom
-keybinds to remain compatible across updates.  This crate help you build tui with keybindingsconfig in an easy way.
+keybinds to remain compatible across updates. This crate helps you build tui with keybindings config in an easy way.
 
 When building a tui application, we need address following topics.
 - `Define a set of keybinding for some events`
