@@ -21,4 +21,4 @@ crossterm_0_28_1 = { package = "crossterm", version = "0.28.1", optional = true,
 serde = { version = "1.0", features = ["derive"] }
 
 [dev-dependencies]
-toml = "0.9.8"
+toml = "0.9.10"
