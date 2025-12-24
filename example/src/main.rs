@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!();
 
-    println!("--- Following are keybinds displays with a verbose formator ---");
+    println!("--- Following are keybinds displays with a verbose formatter ---");
     // Display the keybind in your ui layer
     println!(
         "You can trigger Quit by {}",
