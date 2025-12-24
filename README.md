@@ -96,7 +96,7 @@ if you only make additions to the key binding enum.
 
 ### How to hint user the keybinds
 
-An app with customized keybinding, user may be confuse to use the app when the keybind is changed, 
+An app with customized keybinding, user may be confused to use the app when the keybind is changed, 
 it will be nice to hint user current keybind for Quit by `Quit.key_bindings_display()`(same as symbols format),
 `Quit.key_bindings_display_with_format(DisplayFormat::Symbols)` or
 `Quit.key_bindings_display_with_format(DisplayFormat::Verbose)` in the ui.
