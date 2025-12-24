@@ -275,6 +275,7 @@ impl fmt::Display for KeyBinding {
 
 impl fmt::Debug for KeyBinding {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f,"\"")?;
         match self.modifiers {
             KeyModifiers::SHIFT => write!(f, "Shift+")?,
             KeyModifiers::CONTROL => write!(f, "Control+")?,
@@ -286,44 +287,45 @@ impl fmt::Debug for KeyBinding {
             _ => write!(f, "UNKNOWN+")?,
         };
         match self.code {
-            KeyCode::Char(c) => write!(f, "{}", c),
-            KeyCode::Backspace => write!(f, "Backspace"),
-            KeyCode::Enter => write!(f, "Enter"),
-            KeyCode::Left => write!(f, "Left"),
-            KeyCode::Right => write!(f, "Right"),
-            KeyCode::Up => write!(f, "Up"),
-            KeyCode::Down => write!(f, "Down"),
-            KeyCode::Home => write!(f, "Home"),
-            KeyCode::End => write!(f, "End"),
-            KeyCode::PageUp => write!(f, "PageUp"),
-            KeyCode::PageDown => write!(f, "PageDown"),
-            KeyCode::Tab => write!(f, "Tab"),
-            KeyCode::BackTab => write!(f, "BackTab"),
-            KeyCode::Delete => write!(f, "Delete"),
-            KeyCode::Insert => write!(f, "Insert"),
-            KeyCode::F(n) => write!(f, "F{}", n),
-            KeyCode::Esc => write!(f, "Esc"),
-            KeyCode::CapsLock => write!(f, "CapsLock"),
-            KeyCode::ScrollLock => write!(f, "ScrollLock"),
-            KeyCode::NumLock => write!(f, "NumLock"),
-            KeyCode::PrintScreen => write!(f, "PrintScreen"),
-            KeyCode::Pause => write!(f, "Pause"),
-            KeyCode::Menu => write!(f, "Menu"),
-            KeyCode::KeypadBegin => write!(f, "KeypadBegin"),
-            KeyCode::Media(MediaKeyCode::Play) => write!(f, "Play"),
-            KeyCode::Media(MediaKeyCode::PlayPause) => write!(f, "PlayPause"),
-            KeyCode::Media(MediaKeyCode::Reverse) => write!(f, "Reverse"),
-            KeyCode::Media(MediaKeyCode::Stop) => write!(f, "Stop"),
-            KeyCode::Media(MediaKeyCode::FastForward) => write!(f, "FastForward"),
-            KeyCode::Media(MediaKeyCode::Rewind) => write!(f, "Rewind"),
-            KeyCode::Media(MediaKeyCode::TrackNext) => write!(f, "TrackNext"),
-            KeyCode::Media(MediaKeyCode::TrackPrevious) => write!(f, "TrackPrevious"),
-            KeyCode::Media(MediaKeyCode::Record) => write!(f, "Record"),
-            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "LowerVolume"),
-            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "RaiseVolume"),
-            KeyCode::Media(MediaKeyCode::MuteVolume) => write!(f, "MuteVolume"),
-            _ => write!(f, "?"),
+            KeyCode::Char(c) => write!(f, "{}", c)?,
+            KeyCode::Backspace => write!(f, "Backspace")?,
+            KeyCode::Enter => write!(f, "Enter")?,
+            KeyCode::Left => write!(f, "Left")?,
+            KeyCode::Right => write!(f, "Right")?,
+            KeyCode::Up => write!(f, "Up")?,
+            KeyCode::Down => write!(f, "Down")?,
+            KeyCode::Home => write!(f, "Home")?,
+            KeyCode::End => write!(f, "End")?,
+            KeyCode::PageUp => write!(f, "PageUp")?,
+            KeyCode::PageDown => write!(f, "PageDown")?,
+            KeyCode::Tab => write!(f, "Tab")?,
+            KeyCode::BackTab => write!(f, "BackTab")?,
+            KeyCode::Delete => write!(f, "Delete")?,
+            KeyCode::Insert => write!(f, "Insert")?,
+            KeyCode::F(n) => write!(f, "F{}", n)?,
+            KeyCode::Esc => write!(f, "Esc")?,
+            KeyCode::CapsLock => write!(f, "CapsLock")?,
+            KeyCode::ScrollLock => write!(f, "ScrollLock")?,
+            KeyCode::NumLock => write!(f, "NumLock")?,
+            KeyCode::PrintScreen => write!(f, "PrintScreen")?,
+            KeyCode::Pause => write!(f, "Pause")?,
+            KeyCode::Menu => write!(f, "Menu")?,
+            KeyCode::KeypadBegin => write!(f, "KeypadBegin")?,
+            KeyCode::Media(MediaKeyCode::Play) => write!(f, "Play")?,
+            KeyCode::Media(MediaKeyCode::PlayPause) => write!(f, "PlayPause")?,
+            KeyCode::Media(MediaKeyCode::Reverse) => write!(f, "Reverse")?,
+            KeyCode::Media(MediaKeyCode::Stop) => write!(f, "Stop")?,
+            KeyCode::Media(MediaKeyCode::FastForward) => write!(f, "FastForward")?,
+            KeyCode::Media(MediaKeyCode::Rewind) => write!(f, "Rewind")?,
+            KeyCode::Media(MediaKeyCode::TrackNext) => write!(f, "TrackNext")?,
+            KeyCode::Media(MediaKeyCode::TrackPrevious) => write!(f, "TrackPrevious")?,
+            KeyCode::Media(MediaKeyCode::Record) => write!(f, "Record")?,
+            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "LowerVolume")?,
+            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "RaiseVolume")?,
+            KeyCode::Media(MediaKeyCode::MuteVolume) => write!(f, "MuteVolume")?,
+            _ => write!(f, "?")?,
         }
+        write!(f,"\"")
     }
 }
 
@@ -358,13 +360,15 @@ impl fmt::Display for KeyBindings {
 
 impl fmt::Debug for KeyBindings {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[")?;
         for (i, kb) in self.0.iter().enumerate() {
             if i > 0 {
-                write!(f, " | {:?}", kb)?; // Add delimiter
+                write!(f, ", {:?}", kb)?;
             } else {
                 write!(f, "{:?}", kb)?;
             }
         }
+        write!(f, "]")?;
         Ok(())
     }
 }

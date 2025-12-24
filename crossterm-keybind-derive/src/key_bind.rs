@@ -185,7 +185,7 @@ impl Events {
                             #name::#fields => {
                                 match f {
                                     crossterm_keybind::DisplayFormat::Symbols => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
-                                    crossterm_keybind::DisplayFormat::Verbose => format!("{:?}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
+                                    crossterm_keybind::DisplayFormat::Debug => format!("{:?}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
                                 }
                             },
                         )*

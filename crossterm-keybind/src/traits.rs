@@ -25,7 +25,10 @@ pub trait KeyBindTrait {
 
 #[derive(Default, PartialEq)]
 pub enum DisplayFormat {
+    /// use symbol for each key strick
     #[default]
     Symbols,
-    Verbose,
+
+    /// Debug print same as config format
+    Debug,
 }
