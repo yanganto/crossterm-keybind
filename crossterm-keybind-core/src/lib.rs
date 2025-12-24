@@ -527,8 +527,8 @@ mod tests {
         assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
         assert_eq!(format!("{}", t_with_esc.kb), "⎋");
 
-        assert_eq!(format!("{:?}", t_with_modifiers.kb), "Control+c");
-        assert_eq!(format!("{:?}", t_with_esc.kb), "Esc");
+        assert_eq!(t_with_modifiers.kb.display(&DisplayFormat::Verbose), "Control+c");
+        assert_eq!(t_with_esc.kb.display(&DisplayFormat::Verbose), "Esc");
     }
 
     #[test]
@@ -543,7 +543,7 @@ mod tests {
     fn fmt_keybindings_config() {
         let config = keybindings_config();
         assert_eq!(format!("{}", config.kbs), "^c|Q");
-        assert_eq!(format!("{:?}", config.kbs), "Control+c | Q");
+        assert_eq!(config.kbs.display(&DisplayFormat::Verbose), "Control+c | Q");
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
