@@ -97,9 +97,8 @@ if you only make additions to the key binding enum.
 ### How to hint user the keybinds
 
 An app with customized keybinding, user may be confused to use the app when the keybind is changed, 
-it will be nice to hint user current keybind for Quit by `Quit.key_bindings_display()`(same as symbols format),
-`Quit.key_bindings_display_with_format(DisplayFormat::Symbols)` or
-`Quit.key_bindings_display_with_format(DisplayFormat::Debug)` in the ui.
+it will be nice to hint user current keybind for Quit by `Quit.key_bindings_display()`(same as symbols format) or 
+`Quit.key_bindings_display_with_format(DisplayFormat::...)` in the ui.
 
 ```text
 --- Following keybinds are displayed with symbols
@@ -108,6 +107,8 @@ You can trigger Quit by ^c|Q|q
 --- Following keybinds are displayed in debug format
 You can trigger Quit by ["Control+c", "Q", "q"]
 
+--- Following are keybinds displayed in verbose format ---
+You can trigger Quit by Control+c | Q | q
 ```
 
 ## Dependency

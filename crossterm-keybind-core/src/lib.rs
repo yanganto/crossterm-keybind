@@ -4,6 +4,19 @@ use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 
+#[derive(Default, PartialEq)]
+pub enum DisplayFormat {
+    /// use symbol for each key strick
+    #[default]
+    Symbols,
+
+    /// Debug print same as config format
+    Debug,
+
+    /// Display with full name of key
+    Verbose,
+}
+
 #[derive(PartialEq)]
 pub struct KeyBinding {
     // TODO: Where is Space
@@ -329,6 +342,67 @@ impl fmt::Debug for KeyBinding {
     }
 }
 
+impl KeyBinding {
+    pub fn display(&self, f: &DisplayFormat) -> String {
+        match f {
+            DisplayFormat::Symbols => format!("{}", self),
+            DisplayFormat::Debug => format!("{:?}", self),
+            DisplayFormat::Verbose =>  {
+                let mut display = match self.modifiers {
+                    KeyModifiers::SHIFT => "Shift+".to_string(),
+                    KeyModifiers::CONTROL => "Control+".to_string(),
+                    KeyModifiers::ALT => "Alternate+".to_string(),
+                    KeyModifiers::SUPER => "Super+".to_string(),
+                    KeyModifiers::HYPER => "Hyper+".to_string(),
+                    KeyModifiers::META =>  "Meta+".to_string(),
+                    KeyModifiers::NONE => String::new(),
+                    _ => "UNKNOWN+".to_string(),
+                };
+                match self.code {
+                    KeyCode::Char(c) => display.push(c),
+                    KeyCode::Backspace => display.push_str("Backspace"),
+                    KeyCode::Enter => display.push_str("Enter"),
+                    KeyCode::Left => display.push_str("Left"),
+                    KeyCode::Right => display.push_str("Right"),
+                    KeyCode::Up => display.push_str("Up"),
+                    KeyCode::Down => display.push_str("Down"),
+                    KeyCode::Home => display.push_str("Home"),
+                    KeyCode::End => display.push_str("End"),
+                    KeyCode::PageUp => display.push_str("PageUp"),
+                    KeyCode::PageDown => display.push_str("PageDown"),
+                    KeyCode::Tab => display.push_str("Tab"),
+                    KeyCode::BackTab => display.push_str("BackTab"),
+                    KeyCode::Delete => display.push_str("Delete"),
+                    KeyCode::Insert => display.push_str("Insert"),
+                    KeyCode::F(n) => display.push_str(&format!("F{}", n)),
+                    KeyCode::Esc => display.push_str("Esc"),
+                    KeyCode::CapsLock => display.push_str("CapsLock"),
+                    KeyCode::ScrollLock => display.push_str("ScrollLock"),
+                    KeyCode::NumLock => display.push_str("NumLock"),
+                    KeyCode::PrintScreen => display.push_str("PrintScreen"),
+                    KeyCode::Pause => display.push_str("Pause"),
+                    KeyCode::Menu => display.push_str("Menu"),
+                    KeyCode::KeypadBegin => display.push_str("KeypadBegin"),
+                    KeyCode::Media(MediaKeyCode::Play) => display.push_str("Play"),
+                    KeyCode::Media(MediaKeyCode::PlayPause) => display.push_str("PlayPause"),
+                    KeyCode::Media(MediaKeyCode::Reverse) => display.push_str("Reverse"),
+                    KeyCode::Media(MediaKeyCode::Stop) => display.push_str("Stop"),
+                    KeyCode::Media(MediaKeyCode::FastForward) => display.push_str("FastForward"),
+                    KeyCode::Media(MediaKeyCode::Rewind) => display.push_str("Rewind"),
+                    KeyCode::Media(MediaKeyCode::TrackNext) => display.push_str("TrackNext"),
+                    KeyCode::Media(MediaKeyCode::TrackPrevious) => display.push_str("TrackPrevious"),
+                    KeyCode::Media(MediaKeyCode::Record) => display.push_str("Record"),
+                    KeyCode::Media(MediaKeyCode::LowerVolume) => display.push_str("LowerVolume"),
+                    KeyCode::Media(MediaKeyCode::RaiseVolume) => display.push_str("RaiseVolume"),
+                    KeyCode::Media(MediaKeyCode::MuteVolume) => display.push_str("MuteVolume"),
+                    _ => display.push('?'),
+                }
+                display
+            }
+        }
+    }
+}
+
 /// KeyBindings struct for key bind configure
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct KeyBindings(Vec<KeyBinding>);
@@ -370,6 +444,26 @@ impl fmt::Debug for KeyBindings {
         }
         write!(f, "]")?;
         Ok(())
+    }
+}
+impl KeyBindings {
+    pub fn display(&self, f: &DisplayFormat) -> String {
+        match f {
+            DisplayFormat::Symbols => format!("{}", self),
+            DisplayFormat::Debug => format!("{:?}", self),
+            DisplayFormat::Verbose => {
+                let mut display = String::new();
+                for (i, kb) in self.0.iter().enumerate() {
+                    if i > 0 {
+                        display.push_str(" | ");
+                        display.push_str(&kb.display(f));
+                    } else {
+                        display.push_str(&kb.display(f));
+                    }
+                }
+                display
+            }
+        }
     }
 }
 

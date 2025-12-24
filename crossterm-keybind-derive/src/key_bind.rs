@@ -179,13 +179,14 @@ impl Events {
                     }
                 }
 
-                fn key_bindings_display_with_format(&self, f: crossterm_keybind::DisplayFormat) -> String {
+                fn key_bindings_display_with_format(&self, f: &crossterm_keybind::DisplayFormat) -> String {
                     match self {
                         #(
                             #name::#fields => {
                                 match f {
                                     crossterm_keybind::DisplayFormat::Symbols => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
                                     crossterm_keybind::DisplayFormat::Debug => format!("{:?}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
+                                    _f => unsafe { (*(&raw mut #uppers)).assume_init_mut() }.display(_f),
                                 }
                             },
                         )*

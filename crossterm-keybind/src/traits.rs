@@ -15,20 +15,10 @@ pub trait KeyBindTrait {
     fn key_bindings_display(&self) -> String;
 
     /// Key bindings display with format
-    fn key_bindings_display_with_format(&self, f: DisplayFormat) -> String;
+    fn key_bindings_display_with_format(&self, f: &crossterm_keybind_core::DisplayFormat) -> String;
 
     /// Dispatch events from the key bindings
     fn dispatch(key_event: &crate::event::KeyEvent) -> Vec<Self>
     where
         Self: Sized;
-}
-
-#[derive(Default, PartialEq)]
-pub enum DisplayFormat {
-    /// use symbol for each key strick
-    #[default]
-    Symbols,
-
-    /// Debug print same as config format
-    Debug,
 }
