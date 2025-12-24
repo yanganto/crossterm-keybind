@@ -64,7 +64,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!();
 
-    println!("--- Following are keybinds displays with a abbreviation name formatter ---");
+    println!("--- Following are keybinds displays with an abbreviation name formatter ---");
     // Display the keybind in your ui layer
     println!(
         "You can trigger Quit by {}",
