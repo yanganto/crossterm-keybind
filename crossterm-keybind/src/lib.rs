@@ -29,4 +29,4 @@ pub use toml;
 pub use toml_example;
 pub use traits::KeyBindTrait;
 
-pub use crossterm_keybind_core::{KeyBinding, KeyBindings};
+pub use crossterm_keybind_core::{KeyBinding, KeyBindings, DisplayFormat};

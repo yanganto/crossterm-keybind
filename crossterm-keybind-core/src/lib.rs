@@ -4,6 +4,22 @@ use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 
+#[derive(Default, PartialEq)]
+pub enum DisplayFormat {
+    /// use symbol for each key stroke
+    #[default]
+    Symbols,
+
+    /// Debug print same as config format
+    Debug,
+
+    /// Display with full name of key
+    Full,
+
+    /// Display with abbreviated key names (e.g., 'Ctrl' instead of 'Control')
+    Abbreviation
+}
+
 #[derive(PartialEq)]
 pub struct KeyBinding {
     // TODO: Where is Space
@@ -19,7 +35,7 @@ impl Serialize for KeyBinding {
         let mut s = match self.modifiers {
             KeyModifiers::SHIFT => "Shift+".to_string(),
             KeyModifiers::CONTROL => "Control+".to_string(),
-            KeyModifiers::ALT => "Alt+".to_string(),
+            KeyModifiers::ALT => "Alternate+".to_string(),
             KeyModifiers::SUPER => "Super+".to_string(),
             KeyModifiers::HYPER => "Hyper+".to_string(),
             KeyModifiers::META => "Meta+".to_string(),
@@ -273,6 +289,125 @@ impl fmt::Display for KeyBinding {
     }
 }
 
+impl fmt::Debug for KeyBinding {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f,"\"")?;
+        match self.modifiers {
+            KeyModifiers::SHIFT => write!(f, "Shift+")?,
+            KeyModifiers::CONTROL => write!(f, "Control+")?,
+            KeyModifiers::ALT => write!(f, "Alternate+")?,
+            KeyModifiers::SUPER => write!(f, "Super+")?,
+            KeyModifiers::HYPER => write!(f, "Hyper+")?,
+            KeyModifiers::META => write!(f, "Meta+")?,
+            KeyModifiers::NONE => write!(f, "")?,
+            _ => write!(f, "UNKNOWN+")?,
+        };
+        match self.code {
+            KeyCode::Char(c) => write!(f, "{}", c)?,
+            KeyCode::Backspace => write!(f, "Backspace")?,
+            KeyCode::Enter => write!(f, "Enter")?,
+            KeyCode::Left => write!(f, "Left")?,
+            KeyCode::Right => write!(f, "Right")?,
+            KeyCode::Up => write!(f, "Up")?,
+            KeyCode::Down => write!(f, "Down")?,
+            KeyCode::Home => write!(f, "Home")?,
+            KeyCode::End => write!(f, "End")?,
+            KeyCode::PageUp => write!(f, "PageUp")?,
+            KeyCode::PageDown => write!(f, "PageDown")?,
+            KeyCode::Tab => write!(f, "Tab")?,
+            KeyCode::BackTab => write!(f, "BackTab")?,
+            KeyCode::Delete => write!(f, "Delete")?,
+            KeyCode::Insert => write!(f, "Insert")?,
+            KeyCode::F(n) => write!(f, "F{}", n)?,
+            KeyCode::Esc => write!(f, "Esc")?,
+            KeyCode::CapsLock => write!(f, "CapsLock")?,
+            KeyCode::ScrollLock => write!(f, "ScrollLock")?,
+            KeyCode::NumLock => write!(f, "NumLock")?,
+            KeyCode::PrintScreen => write!(f, "PrintScreen")?,
+            KeyCode::Pause => write!(f, "Pause")?,
+            KeyCode::Menu => write!(f, "Menu")?,
+            KeyCode::KeypadBegin => write!(f, "KeypadBegin")?,
+            KeyCode::Media(MediaKeyCode::Play) => write!(f, "Play")?,
+            KeyCode::Media(MediaKeyCode::PlayPause) => write!(f, "PlayPause")?,
+            KeyCode::Media(MediaKeyCode::Reverse) => write!(f, "Reverse")?,
+            KeyCode::Media(MediaKeyCode::Stop) => write!(f, "Stop")?,
+            KeyCode::Media(MediaKeyCode::FastForward) => write!(f, "FastForward")?,
+            KeyCode::Media(MediaKeyCode::Rewind) => write!(f, "Rewind")?,
+            KeyCode::Media(MediaKeyCode::TrackNext) => write!(f, "TrackNext")?,
+            KeyCode::Media(MediaKeyCode::TrackPrevious) => write!(f, "TrackPrevious")?,
+            KeyCode::Media(MediaKeyCode::Record) => write!(f, "Record")?,
+            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "LowerVolume")?,
+            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "RaiseVolume")?,
+            KeyCode::Media(MediaKeyCode::MuteVolume) => write!(f, "MuteVolume")?,
+            _ => write!(f, "?")?,
+        }
+        write!(f,"\"")
+    }
+}
+
+impl KeyBinding {
+    pub fn display(&self, f: &DisplayFormat) -> String {
+        match f {
+            DisplayFormat::Symbols => format!("{}", self),
+            DisplayFormat::Debug => format!("{:?}", self),
+            DisplayFormat::Full | DisplayFormat::Abbreviation =>  {
+                let mut display = match (f, self.modifiers) {
+                    (_, KeyModifiers::SHIFT) => "Shift+".to_string(),
+                    (DisplayFormat::Full, KeyModifiers::CONTROL) => "Control+".to_string(),
+                    (DisplayFormat::Abbreviation, KeyModifiers::CONTROL) => "Ctrl+".to_string(),
+                    (DisplayFormat::Full, KeyModifiers::ALT) => "Alternate+".to_string(),
+                    (DisplayFormat::Abbreviation, KeyModifiers::ALT) => "Alt+".to_string(),
+                    (_, KeyModifiers::SUPER) => "Super+".to_string(),
+                    (_, KeyModifiers::HYPER) => "Hyper+".to_string(),
+                    (_, KeyModifiers::META) =>  "Meta+".to_string(),
+                    (_, KeyModifiers::NONE) => String::new(),
+                    (_, _) => "UNKNOWN+".to_string(),
+                };
+                match self.code {
+                    KeyCode::Char(c) => display.push(c),
+                    KeyCode::Backspace => display.push_str("Backspace"),
+                    KeyCode::Enter => display.push_str("Enter"),
+                    KeyCode::Left => display.push_str("Left"),
+                    KeyCode::Right => display.push_str("Right"),
+                    KeyCode::Up => display.push_str("Up"),
+                    KeyCode::Down => display.push_str("Down"),
+                    KeyCode::Home => display.push_str("Home"),
+                    KeyCode::End => display.push_str("End"),
+                    KeyCode::PageUp => display.push_str("PageUp"),
+                    KeyCode::PageDown => display.push_str("PageDown"),
+                    KeyCode::Tab => display.push_str("Tab"),
+                    KeyCode::BackTab => display.push_str("BackTab"),
+                    KeyCode::Delete => display.push_str("Delete"),
+                    KeyCode::Insert => display.push_str("Insert"),
+                    KeyCode::F(n) => display.push_str(&format!("F{}", n)),
+                    KeyCode::Esc => display.push_str("Esc"),
+                    KeyCode::CapsLock => display.push_str("CapsLock"),
+                    KeyCode::ScrollLock => display.push_str("ScrollLock"),
+                    KeyCode::NumLock => display.push_str("NumLock"),
+                    KeyCode::PrintScreen => display.push_str("PrintScreen"),
+                    KeyCode::Pause => display.push_str("Pause"),
+                    KeyCode::Menu => display.push_str("Menu"),
+                    KeyCode::KeypadBegin => display.push_str("KeypadBegin"),
+                    KeyCode::Media(MediaKeyCode::Play) => display.push_str("Play"),
+                    KeyCode::Media(MediaKeyCode::PlayPause) => display.push_str("PlayPause"),
+                    KeyCode::Media(MediaKeyCode::Reverse) => display.push_str("Reverse"),
+                    KeyCode::Media(MediaKeyCode::Stop) => display.push_str("Stop"),
+                    KeyCode::Media(MediaKeyCode::FastForward) => display.push_str("FastForward"),
+                    KeyCode::Media(MediaKeyCode::Rewind) => display.push_str("Rewind"),
+                    KeyCode::Media(MediaKeyCode::TrackNext) => display.push_str("TrackNext"),
+                    KeyCode::Media(MediaKeyCode::TrackPrevious) => display.push_str("TrackPrevious"),
+                    KeyCode::Media(MediaKeyCode::Record) => display.push_str("Record"),
+                    KeyCode::Media(MediaKeyCode::LowerVolume) => display.push_str("LowerVolume"),
+                    KeyCode::Media(MediaKeyCode::RaiseVolume) => display.push_str("RaiseVolume"),
+                    KeyCode::Media(MediaKeyCode::MuteVolume) => display.push_str("MuteVolume"),
+                    _ => display.push('?'),
+                }
+                display
+            }
+        }
+    }
+}
+
 /// KeyBindings struct for key bind configure
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct KeyBindings(Vec<KeyBinding>);
@@ -299,6 +434,41 @@ impl fmt::Display for KeyBindings {
             }
         }
         Ok(())
+    }
+}
+
+impl fmt::Debug for KeyBindings {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[")?;
+        for (i, kb) in self.0.iter().enumerate() {
+            if i > 0 {
+                write!(f, ", {:?}", kb)?;
+            } else {
+                write!(f, "{:?}", kb)?;
+            }
+        }
+        write!(f, "]")?;
+        Ok(())
+    }
+}
+impl KeyBindings {
+    pub fn display(&self, f: &DisplayFormat) -> String {
+        match f {
+            DisplayFormat::Symbols => format!("{}", self),
+            DisplayFormat::Debug => format!("{:?}", self),
+            _ => {
+                let mut display = String::new();
+                for (i, kb) in self.0.iter().enumerate() {
+                    if i > 0 {
+                        display.push_str(" | ");
+                        display.push_str(&kb.display(f));
+                    } else {
+                        display.push_str(&kb.display(f));
+                    }
+                }
+                display
+            }
+        }
     }
 }
 
@@ -361,6 +531,10 @@ mod tests {
 
         assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
         assert_eq!(format!("{}", t_with_esc.kb), "⎋");
+
+        assert_eq!(t_with_modifiers.kb.display(&DisplayFormat::Full), "Control+c");
+        assert_eq!(t_with_modifiers.kb.display(&DisplayFormat::Abbreviation), "Ctrl+c");
+        assert_eq!(t_with_esc.kb.display(&DisplayFormat::Full), "Esc");
     }
 
     #[test]
@@ -375,6 +549,8 @@ mod tests {
     fn fmt_keybindings_config() {
         let config = keybindings_config();
         assert_eq!(format!("{}", config.kbs), "^c|Q");
+        assert_eq!(config.kbs.display(&DisplayFormat::Full), "Control+c | Q");
+        assert_eq!(config.kbs.display(&DisplayFormat::Abbreviation), "Ctrl+c | Q");
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
