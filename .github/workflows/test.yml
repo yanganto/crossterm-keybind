@@ -23,7 +23,9 @@ jobs:
 
       - name: Test with derive
         run: |
+          nix develop -c cargo test
           nix develop -c cargo test --features=derive
+          nix develop -c cargo test --features=case_ignore
 
       - name: Run example with ratatui
         run: |

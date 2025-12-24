@@ -76,7 +76,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "crossterm",
  "crossterm-keybind-core",
@@ -89,16 +89,17 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-core"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "crossterm",
  "serde",
+ "str-utils",
  "toml",
 ]
 
 [[package]]
 name = "crossterm-keybind-derive"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "convert_case",
  "crossterm-keybind-core",
@@ -176,7 +177,7 @@ dependencies = [
 
 [[package]]
 name = "example"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "crossterm-keybind",
  "ratatui",
@@ -550,6 +551,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
+name = "str-utils"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e0ba6201395531a37574515e1150331329ec0feb5ccfdce454ea368ecb219263"
+dependencies = [
+ "unicase",
+ "utf8-width",
+]
+
+[[package]]
 name = "strsim"
 version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -689,6 +700,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ab16f14aed21ee8bfd8ec22513f7287cd4a91aa92e44edfe2c17ddd004e92607"
 
 [[package]]
+name = "unicase"
+version = "2.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75b844d17643ee918803943289730bec8aac480150456169e647ed0b576ba539"
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -722,6 +739,12 @@ name = "unicode-width"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fc81956842c57dac11422a97c3b8195a1ff727f06e85c84ed2e8aa277c9a0fd"
+
+[[package]]
+name = "utf8-width"
+version = "0.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1292c0d970b54115d14f2492fe0170adf21d68a1de108eebc51c1df4f346a091"
 
 [[package]]
 name = "wasi"

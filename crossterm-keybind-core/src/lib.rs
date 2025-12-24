@@ -3,6 +3,8 @@ use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
+#[cfg(feature = "case_ignore")]
+use str_utils::StartsWithIgnoreAsciiCase;
 
 #[derive(Default, PartialEq)]
 pub enum DisplayFormat {
@@ -193,11 +195,30 @@ impl<'de> Deserialize<'de> for KeyBinding {
 
         <String as Deserialize>::deserialize(deserializer).map(|s| {
             if s.contains('+') {
+                #[cfg(feature = "case_ignore")]
+                if s.starts_with_ignore_ascii_case("Shift") {
+                    key_bindings.modifiers = KeyModifiers::SHIFT;
+                } else if s.starts_with_ignore_ascii_case("Control") || s.starts_with_ignore_ascii_case("Ctrl") {
+                    key_bindings.modifiers = KeyModifiers::CONTROL;
+                } else if s.starts_with_ignore_ascii_case("Alternate") || s.starts_with_ignore_ascii_case("Alt") {
+                    key_bindings.modifiers = KeyModifiers::ALT;
+                } else if s.starts_with_ignore_ascii_case("Super") {
+                    key_bindings.modifiers = KeyModifiers::SUPER;
+                } else if s.starts_with_ignore_ascii_case("Hyper") {
+                    key_bindings.modifiers = KeyModifiers::HYPER;
+                } else if s.starts_with_ignore_ascii_case("Meta") {
+                    key_bindings.modifiers = KeyModifiers::META;
+                } else {
+                    error = Some(de::Error::custom(
+                        "Currently only support following KeyModifiers: Shift, Control, Alternate, Super, Hyper, Meta"
+                    ));
+                }
+                #[cfg(not(feature = "case_ignore"))]
                 if s.starts_with("Shift") {
                     key_bindings.modifiers = KeyModifiers::SHIFT;
-                } else if s.starts_with("Control") {
+                } else if s.starts_with("Control") || s.starts_with("Ctrl") {
                     key_bindings.modifiers = KeyModifiers::CONTROL;
-                } else if s.starts_with("Alt") {
+                } else if s.starts_with("Alternate") || s.starts_with("Alt") {
                     key_bindings.modifiers = KeyModifiers::ALT;
                 } else if s.starts_with("Super") {
                     key_bindings.modifiers = KeyModifiers::SUPER;
@@ -207,7 +228,7 @@ impl<'de> Deserialize<'de> for KeyBinding {
                     key_bindings.modifiers = KeyModifiers::META;
                 } else {
                     error = Some(de::Error::custom(
-                        "Currently only support following KeyModifiers: Shift, Control, Alt, Super, Hyper, Meta"
+                        "Currently only support following KeyModifiers: Shift, Control, Alternate, Super, Hyper, Meta"
                     ));
                 }
                 let mut splitter = s.splitn(2, '+');
@@ -487,10 +508,13 @@ mod tests {
 
     #[test]
     fn ser_keybinding_config() {
-        let (t_with_modifiers, t, only_modifiers, t_with_esc) = keybinding_configs();
+        let (t_with_ctrl_modifier, t_with_alt_modifier,t, only_modifiers, t_with_esc) = keybinding_configs();
 
-        let serialized = toml::to_string(&t_with_modifiers).unwrap();
+        let serialized = toml::to_string(&t_with_ctrl_modifier).unwrap();
         assert_eq!(serialized, "kb = \"Control+c\"\n");
+
+        let serialized = toml::to_string(&t_with_alt_modifier).unwrap();
+        assert_eq!(serialized, "kb = \"Alternate+c\"\n");
 
         let serialized = toml::to_string(&t).unwrap();
         assert_eq!(serialized, "kb = \"Q\"\n");
@@ -506,13 +530,25 @@ mod tests {
     }
 
     #[test]
-    fn de_keybinding_config() {
-        let (t_with_modifiers, t, _only_modifiers, t_with_esc) = keybinding_configs();
+    #[cfg(feature = "case_ignore")]
+    fn deserialize_with_wrong_config() {
+        let desered_t: T = toml::from_str("kb = \"control+c\"\n").unwrap();
+        assert_eq!(desered_t.kb.modifiers, KeyModifiers::CONTROL);
+    }
 
-        let serialized = toml::to_string(&t_with_modifiers).unwrap();
+    #[test]
+    fn de_keybinding_config() {
+        let (t_with_ctrl_modifier, t_with_alt_modifier, t, _only_modifiers, t_with_esc) = keybinding_configs();
+
+        let serialized = toml::to_string(&t_with_ctrl_modifier).unwrap();
         let desered_t: T = toml::from_str(serialized.as_str()).unwrap();
-        assert_eq!(desered_t.kb.code, t_with_modifiers.kb.code);
-        assert_eq!(desered_t.kb.modifiers, t_with_modifiers.kb.modifiers);
+        assert_eq!(desered_t.kb.code, t_with_ctrl_modifier.kb.code);
+        assert_eq!(desered_t.kb.modifiers, t_with_ctrl_modifier.kb.modifiers);
+
+        let serialized = toml::to_string(&t_with_alt_modifier).unwrap();
+        let desered_t: T = toml::from_str(serialized.as_str()).unwrap();
+        assert_eq!(desered_t.kb.code, t_with_alt_modifier.kb.code);
+        assert_eq!(desered_t.kb.modifiers, t_with_alt_modifier.kb.modifiers);
 
         let serialized = toml::to_string(&t).unwrap();
         let desered_t: T = toml::from_str(serialized.as_str()).unwrap();
@@ -527,7 +563,7 @@ mod tests {
 
     #[test]
     fn fmt_keybinding_config() {
-        let (t_with_modifiers, _t, _only_modifiers, t_with_esc) = keybinding_configs();
+        let (t_with_modifiers, _t_with_alt, _t, _only_modifiers, t_with_esc) = keybinding_configs();
 
         assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
         assert_eq!(format!("{}", t_with_esc.kb), "⎋");
@@ -554,12 +590,18 @@ mod tests {
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
-    fn keybinding_configs() -> (T, T, T, T) {
+    fn keybinding_configs() -> (T, T, T, T, T) {
         (
             T {
                 kb: KeyBinding {
                     code: KeyCode::Char('c'),
                     modifiers: KeyModifiers::CONTROL,
+                },
+            },
+            T {
+                kb: KeyBinding {
+                    code: KeyCode::Char('c'),
+                    modifiers: KeyModifiers::ALT,
                 },
             },
             T {
