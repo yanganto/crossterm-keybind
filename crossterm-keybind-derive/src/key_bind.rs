@@ -179,6 +179,19 @@ impl Events {
                     }
                 }
 
+                fn key_bindings_display_with_format(&self, f: crossterm_keybind::DisplayFormat) -> String {
+                    match self {
+                        #(
+                            #name::#fields => {
+                                match f {
+                                    crossterm_keybind::DisplayFormat::Symbols => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
+                                    crossterm_keybind::DisplayFormat::Verbose => format!("{:?}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
+                                }
+                            },
+                        )*
+                    }
+                }
+
                 fn dispatch(key_event: &crossterm_keybind::event::KeyEvent) -> Vec<Self> {
                     let mut output = Vec::new();
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {

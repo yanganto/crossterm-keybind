@@ -27,6 +27,6 @@ pub use struct_patch;
 pub use toml;
 #[cfg(feature = "derive")]
 pub use toml_example;
-pub use traits::KeyBindTrait;
+pub use traits::{KeyBindTrait, DisplayFormat};
 
 pub use crossterm_keybind_core::{KeyBinding, KeyBindings};

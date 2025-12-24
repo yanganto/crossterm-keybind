@@ -19,7 +19,7 @@ impl Serialize for KeyBinding {
         let mut s = match self.modifiers {
             KeyModifiers::SHIFT => "Shift+".to_string(),
             KeyModifiers::CONTROL => "Control+".to_string(),
-            KeyModifiers::ALT => "Alt+".to_string(),
+            KeyModifiers::ALT => "Alternate+".to_string(),
             KeyModifiers::SUPER => "Super+".to_string(),
             KeyModifiers::HYPER => "Hyper+".to_string(),
             KeyModifiers::META => "Meta+".to_string(),
@@ -273,6 +273,60 @@ impl fmt::Display for KeyBinding {
     }
 }
 
+impl fmt::Debug for KeyBinding {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.modifiers {
+            KeyModifiers::SHIFT => write!(f, "Shift+")?,
+            KeyModifiers::CONTROL => write!(f, "Control+")?,
+            KeyModifiers::ALT => write!(f, "Alternate+")?,
+            KeyModifiers::SUPER => write!(f, "Super+")?,
+            KeyModifiers::HYPER => write!(f, "Hyper+")?,
+            KeyModifiers::META => write!(f, "Meta+")?,
+            KeyModifiers::NONE => write!(f, "")?,
+            _ => write!(f, "UNKNOWN+")?,
+        };
+        match self.code {
+            KeyCode::Char(c) => write!(f, "{}", c),
+            KeyCode::Backspace => write!(f, "Backspace"),
+            KeyCode::Enter => write!(f, "Enter"),
+            KeyCode::Left => write!(f, "Left"),
+            KeyCode::Right => write!(f, "Right"),
+            KeyCode::Up => write!(f, "Up"),
+            KeyCode::Down => write!(f, "Down"),
+            KeyCode::Home => write!(f, "Home"),
+            KeyCode::End => write!(f, "End"),
+            KeyCode::PageUp => write!(f, "PageUp"),
+            KeyCode::PageDown => write!(f, "PageDown"),
+            KeyCode::Tab => write!(f, "Tab"),
+            KeyCode::BackTab => write!(f, "BackTab"),
+            KeyCode::Delete => write!(f, "Delete"),
+            KeyCode::Insert => write!(f, "Insert"),
+            KeyCode::F(n) => write!(f, "F{}", n),
+            KeyCode::Esc => write!(f, "Esc"),
+            KeyCode::CapsLock => write!(f, "CapsLock"),
+            KeyCode::ScrollLock => write!(f, "ScrollLock"),
+            KeyCode::NumLock => write!(f, "NumLock"),
+            KeyCode::PrintScreen => write!(f, "PrintScreen"),
+            KeyCode::Pause => write!(f, "Pause"),
+            KeyCode::Menu => write!(f, "Menu"),
+            KeyCode::KeypadBegin => write!(f, "KeypadBegin"),
+            KeyCode::Media(MediaKeyCode::Play) => write!(f, "Play"),
+            KeyCode::Media(MediaKeyCode::PlayPause) => write!(f, "PlayPause"),
+            KeyCode::Media(MediaKeyCode::Reverse) => write!(f, "Reverse"),
+            KeyCode::Media(MediaKeyCode::Stop) => write!(f, "Stop"),
+            KeyCode::Media(MediaKeyCode::FastForward) => write!(f, "FastForward"),
+            KeyCode::Media(MediaKeyCode::Rewind) => write!(f, "Rewind"),
+            KeyCode::Media(MediaKeyCode::TrackNext) => write!(f, "TrackNext"),
+            KeyCode::Media(MediaKeyCode::TrackPrevious) => write!(f, "TrackPrevious"),
+            KeyCode::Media(MediaKeyCode::Record) => write!(f, "Record"),
+            KeyCode::Media(MediaKeyCode::LowerVolume) => write!(f, "LowerVolume"),
+            KeyCode::Media(MediaKeyCode::RaiseVolume) => write!(f, "RaiseVolume"),
+            KeyCode::Media(MediaKeyCode::MuteVolume) => write!(f, "MuteVolume"),
+            _ => write!(f, "?"),
+        }
+    }
+}
+
 /// KeyBindings struct for key bind configure
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct KeyBindings(Vec<KeyBinding>);
@@ -296,6 +350,19 @@ impl fmt::Display for KeyBindings {
                 write!(f, "|{}", kb)?; // Add delimiter
             } else {
                 write!(f, "{}", kb)?;
+            }
+        }
+        Ok(())
+    }
+}
+
+impl fmt::Debug for KeyBindings {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for (i, kb) in self.0.iter().enumerate() {
+            if i > 0 {
+                write!(f, " | {:?}", kb)?; // Add delimiter
+            } else {
+                write!(f, "{:?}", kb)?;
             }
         }
         Ok(())
@@ -361,6 +428,9 @@ mod tests {
 
         assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
         assert_eq!(format!("{}", t_with_esc.kb), "⎋");
+
+        assert_eq!(format!("{:?}", t_with_modifiers.kb), "Control+c");
+        assert_eq!(format!("{:?}", t_with_esc.kb), "Esc");
     }
 
     #[test]
@@ -375,6 +445,7 @@ mod tests {
     fn fmt_keybindings_config() {
         let config = keybindings_config();
         assert_eq!(format!("{}", config.kbs), "^c|Q");
+        assert_eq!(format!("{:?}", config.kbs), "Control+c | Q");
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers

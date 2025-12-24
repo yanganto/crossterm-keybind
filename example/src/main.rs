@@ -1,5 +1,5 @@
 use crossterm_keybind::KeyBind;
-use crossterm_keybind::KeyBindTrait;
+use crossterm_keybind::{KeyBindTrait, DisplayFormat};
 
 /// Following are the keybindings to trigger event to control application.
 #[derive(KeyBind)]
@@ -44,6 +44,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!(
         "You can trigger Quit by {}",
         KeyEvent::Quit.key_bindings_display()
+        // The same as KeyEvent::Quit.key_bindings_display_with_format(DisplayFormat::Symbols)
+    );
+    println!();
+
+    println!("--- Following are keybinds displays with a verbose formator ---");
+    // Display the keybind in your ui layer
+    println!(
+        "You can trigger Quit by {}",
+        KeyEvent::Quit.key_bindings_display_with_format(DisplayFormat::Verbose)
     );
     println!();
 

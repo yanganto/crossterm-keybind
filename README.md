@@ -7,32 +7,8 @@ With growing userbases, developers of Terminal UI (TUI)/ Graphic UI (GUI) apps o
 keybinding schemes (like vim-style bindings or personalized shortcuts). Manually supporting such
 requests quickly becomes a maintenance burden, and as your app evolves, users expect their custom
 keybinds to remain compatible across updates. This crate helps you build tui with keybindings config in an easy way.
-
-When building a tui application, we need address following topics.
-- `Define a set of keybinding for some events`
-- `Capture one/some keybindings and perform an event`
-- `Display a keybinding prompt of an event`
-- `Provide a config file and let user to change all or part of it`
-
-These topics can be abstracted into a trait, and the key binding serialize and deserialize to a
-config file are solved in this crate.
-
-```rust
-pub trait KeyBindTrait {
-    fn init_and_load(patch_path: Option<PathBuf>) -> Result<(), Error>;
-    fn match_any(&self, key_event: &KeyEvent) -> bool;
-    fn toml_example() -> String;
-    fn to_toml_example<P: AsRef<Path>>(file_name: P) -> std::io::Result<()>;
-    fn key_bindings_display(&self) -> String;
-    fn dispatch(key_event: &crate::event::KeyEvent) -> Vec<Self>;
-}
-```
-
-However, there still are a lot of trivial works, ahead you and your great ideal to build tui application.
-So this crate also provides a macro help you to generate the the keyconfig in a supper easy way,
-you can have a toml file for your events and allow users to patch part of it.
-Because users can patch part of config, your application will be backward compatible, if there are
-only additions in the enum with KeyBind derive.
+One [recipe](https://www.ant-lab.tw/blog/2025-12-24/) with migration guilde for ratatui user are provided,
+which is also under review in working [PR](https://github.com/ratatui/ratatui-website/pull/1008).
 
 ## Core Pattern
 We use an approach that defines all keybindings in _a single enum_.
@@ -57,7 +33,7 @@ pub enum KeyEvent {
 
 ### How to capture user input
 
-You can easily use `Quit.match_any(&key)` in the control flow, and `Quit.key_bindings_display()` in the ui.
+You can easily use `Quit.match_any(&key)` in the control flow,
 
 In a less comparing way
 ```rust
@@ -85,8 +61,8 @@ for event in KeyBindEvent::dispatch(&key) {
 
 ### How to provide the default config
 
-You can easily provide a key bind config by `KeyEvent::toml_example()` or `KeyEvent::to_toml_example(path)` as following.
-We also take care the config file documentation
+You can easily provide a key bind config **with documentation** by `KeyEvent::toml_example()` or
+`KeyEvent::to_toml_example(path)` as following.  We also take care the config file documentation
 
 ```toml
 # The app will be closed with following key bindings
@@ -115,8 +91,24 @@ quit = ["Control+q"]
 The config can be loaded successfully. After loading, only `Control+q` can quit the application, and
 the default keys `Control+c`, `Q`, `q` will not work anymore. The keybinds to open a widget will
 remain the same as the default, because the user did not customize them, so the user can still use
-`F1` or `?` to open the widget. You also get the benefit of backward compatibility for key configs,
+`F1` or `?` to open the widget. You also get the benefit of **backward compatibility** for key configs,
 if you only make additions to the key binding enum.
+
+### How to hint user the keybinds
+
+An app with customized keybinding, user may be confuse to use the app when the keybind is changed, 
+it will be nice to hint user current keybind for Quit by `Quit.key_bindings_display()`(same as symbols format),
+`Quit.key_bindings_display_with_format(DisplayFormat::Symbols)` or
+`Quit.key_bindings_display_with_format(DisplayFormat::Verbose)` in the ui.
+
+```text
+--- Following are keybinds displays with symbols---
+You can trigger Quit by ^c|Q|q
+
+--- Following are keybinds displays with verbose format ---
+You can trigger Quit by Control+c | Q | q
+
+```
 
 ## Dependency
 We need additional serde dependency at the same time.

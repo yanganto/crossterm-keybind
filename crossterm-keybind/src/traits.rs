@@ -14,11 +14,18 @@ pub trait KeyBindTrait {
     /// Key bindings display
     fn key_bindings_display(&self) -> String;
 
-    // TODO Key bindings display with formatter
-    // fn key_bindings_display_with_format(&self, fmt: _) -> String;
+    /// Key bindings display with format
+    fn key_bindings_display_with_format(&self, f: DisplayFormat) -> String;
 
     /// Dispatch events from the key bindings
     fn dispatch(key_event: &crate::event::KeyEvent) -> Vec<Self>
     where
         Self: Sized;
+}
+
+#[derive(Default, PartialEq)]
+pub enum DisplayFormat {
+    #[default]
+    Symbols,
+    Verbose,
 }
