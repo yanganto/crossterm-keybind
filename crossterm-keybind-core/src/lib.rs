@@ -6,7 +6,7 @@ use std::fmt;
 
 #[derive(Default, PartialEq)]
 pub enum DisplayFormat {
-    /// use symbol for each key strick
+    /// use symbol for each key stroke
     #[default]
     Symbols,
 
