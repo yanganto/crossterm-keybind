@@ -16,7 +16,7 @@ pub enum DisplayFormat {
     /// Display with full name of key
     Full,
 
-    /// Display with full name of key
+    /// Display with abbreviated key names (e.g., 'Ctrl' instead of 'Control')
     Abbreviation
 }
 
