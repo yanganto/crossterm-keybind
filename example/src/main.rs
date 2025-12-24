@@ -56,11 +56,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!();
 
-    println!("--- Following are keybinds displays with a verbose formatter ---");
+    println!("--- Following are keybinds displays with a full name formatter ---");
     // Display the keybind in your ui layer
     println!(
         "You can trigger Quit by {}",
-        KeyEvent::Quit.key_bindings_display_with_format(&DisplayFormat::Verbose)
+        KeyEvent::Quit.key_bindings_display_with_format(&DisplayFormat::Full)
+    );
+    println!();
+
+    println!("--- Following are keybinds displays with a abbreviation name formatter ---");
+    // Display the keybind in your ui layer
+    println!(
+        "You can trigger Quit by {}",
+        KeyEvent::Quit.key_bindings_display_with_format(&DisplayFormat::Abbreviation)
     );
     println!();
 

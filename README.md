@@ -107,8 +107,11 @@ You can trigger Quit by ^c|Q|q
 --- Following keybinds are displayed with DisplayFormat::Debug ---
 You can trigger Quit by ["Control+c", "Q", "q"]
 
---- Following are keybinds displayed with DisplayFormat::Verbose ---
+--- Following are keybinds displayed with DisplayFormat::Full ---
 You can trigger Quit by Control+c | Q | q
+
+--- Following are keybinds displayed with DisplayFormat::Abbreviation ---
+You can trigger Quit by Ctrl+c | Q | q
 ```
 
 ## Dependency

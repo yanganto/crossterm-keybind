@@ -14,7 +14,10 @@ pub enum DisplayFormat {
     Debug,
 
     /// Display with full name of key
-    Verbose,
+    Full,
+
+    /// Display with full name of key
+    Abbreviation
 }
 
 #[derive(PartialEq)]
@@ -347,16 +350,18 @@ impl KeyBinding {
         match f {
             DisplayFormat::Symbols => format!("{}", self),
             DisplayFormat::Debug => format!("{:?}", self),
-            DisplayFormat::Verbose =>  {
-                let mut display = match self.modifiers {
-                    KeyModifiers::SHIFT => "Shift+".to_string(),
-                    KeyModifiers::CONTROL => "Control+".to_string(),
-                    KeyModifiers::ALT => "Alternate+".to_string(),
-                    KeyModifiers::SUPER => "Super+".to_string(),
-                    KeyModifiers::HYPER => "Hyper+".to_string(),
-                    KeyModifiers::META =>  "Meta+".to_string(),
-                    KeyModifiers::NONE => String::new(),
-                    _ => "UNKNOWN+".to_string(),
+            DisplayFormat::Full | DisplayFormat::Abbreviation =>  {
+                let mut display = match (f, self.modifiers) {
+                    (_, KeyModifiers::SHIFT) => "Shift+".to_string(),
+                    (DisplayFormat::Full, KeyModifiers::CONTROL) => "Control+".to_string(),
+                    (DisplayFormat::Abbreviation, KeyModifiers::CONTROL) => "Ctrl+".to_string(),
+                    (DisplayFormat::Full, KeyModifiers::ALT) => "Alternate+".to_string(),
+                    (DisplayFormat::Abbreviation, KeyModifiers::ALT) => "Alt+".to_string(),
+                    (_, KeyModifiers::SUPER) => "Super+".to_string(),
+                    (_, KeyModifiers::HYPER) => "Hyper+".to_string(),
+                    (_, KeyModifiers::META) =>  "Meta+".to_string(),
+                    (_, KeyModifiers::NONE) => String::new(),
+                    (_, _) => "UNKNOWN+".to_string(),
                 };
                 match self.code {
                     KeyCode::Char(c) => display.push(c),
@@ -451,7 +456,7 @@ impl KeyBindings {
         match f {
             DisplayFormat::Symbols => format!("{}", self),
             DisplayFormat::Debug => format!("{:?}", self),
-            DisplayFormat::Verbose => {
+            _ => {
                 let mut display = String::new();
                 for (i, kb) in self.0.iter().enumerate() {
                     if i > 0 {
@@ -527,8 +532,9 @@ mod tests {
         assert_eq!(format!("{}", t_with_modifiers.kb), "^c");
         assert_eq!(format!("{}", t_with_esc.kb), "⎋");
 
-        assert_eq!(t_with_modifiers.kb.display(&DisplayFormat::Verbose), "Control+c");
-        assert_eq!(t_with_esc.kb.display(&DisplayFormat::Verbose), "Esc");
+        assert_eq!(t_with_modifiers.kb.display(&DisplayFormat::Full), "Control+c");
+        assert_eq!(t_with_modifiers.kb.display(&DisplayFormat::Abbreviation), "Ctrl+c");
+        assert_eq!(t_with_esc.kb.display(&DisplayFormat::Full), "Esc");
     }
 
     #[test]
@@ -543,7 +549,8 @@ mod tests {
     fn fmt_keybindings_config() {
         let config = keybindings_config();
         assert_eq!(format!("{}", config.kbs), "^c|Q");
-        assert_eq!(config.kbs.display(&DisplayFormat::Verbose), "Control+c | Q");
+        assert_eq!(config.kbs.display(&DisplayFormat::Full), "Control+c | Q");
+        assert_eq!(config.kbs.display(&DisplayFormat::Abbreviation), "Ctrl+c | Q");
     }
 
     /// Return keybind config with modifiers, keybind without modifiers, only modifiers
