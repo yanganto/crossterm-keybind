@@ -102,10 +102,10 @@ it will be nice to hint user current keybind for Quit by `Quit.key_bindings_disp
 `Quit.key_bindings_display_with_format(DisplayFormat::Verbose)` in the ui.
 
 ```text
---- Following are keybinds displays with symbols---
+--- Following keybinds are displayed with symbols
 You can trigger Quit by ^c|Q|q
 
---- Following are keybinds displays with verbose format ---
+--- Following keybinds are displayed in verbose format
 You can trigger Quit by Control+c | Q | q
 
 ```
