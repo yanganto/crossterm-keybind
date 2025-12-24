@@ -3,7 +3,8 @@ use crossterm_0_28_1::event::{KeyCode, KeyEvent, KeyModifiers, MediaKeyCode};
 
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
-use str_utils::*;
+#[cfg(feature = "case_ignore")]
+use str_utils::StartsWithIgnoreAsciiCase;
 
 #[derive(Default, PartialEq)]
 pub enum DisplayFormat {
@@ -194,6 +195,7 @@ impl<'de> Deserialize<'de> for KeyBinding {
 
         <String as Deserialize>::deserialize(deserializer).map(|s| {
             if s.contains('+') {
+                #[cfg(feature = "case_ignore")]
                 if s.starts_with_ignore_ascii_case("Shift") {
                     key_bindings.modifiers = KeyModifiers::SHIFT;
                 } else if s.starts_with_ignore_ascii_case("Control") || s.starts_with_ignore_ascii_case("Ctrl") {
@@ -205,6 +207,24 @@ impl<'de> Deserialize<'de> for KeyBinding {
                 } else if s.starts_with_ignore_ascii_case("Hyper") {
                     key_bindings.modifiers = KeyModifiers::HYPER;
                 } else if s.starts_with_ignore_ascii_case("Meta") {
+                    key_bindings.modifiers = KeyModifiers::META;
+                } else {
+                    error = Some(de::Error::custom(
+                        "Currently only support following KeyModifiers: Shift, Control, Alternate, Super, Hyper, Meta"
+                    ));
+                }
+                #[cfg(not(feature = "case_ignore"))]
+                if s.starts_with("Shift") {
+                    key_bindings.modifiers = KeyModifiers::SHIFT;
+                } else if s.starts_with("Control") || s.starts_with("Ctrl") {
+                    key_bindings.modifiers = KeyModifiers::CONTROL;
+                } else if s.starts_with("Alternate") || s.starts_with("Alt") {
+                    key_bindings.modifiers = KeyModifiers::ALT;
+                } else if s.starts_with("Super") {
+                    key_bindings.modifiers = KeyModifiers::SUPER;
+                } else if s.starts_with("Hyper") {
+                    key_bindings.modifiers = KeyModifiers::HYPER;
+                } else if s.starts_with("Meta") {
                     key_bindings.modifiers = KeyModifiers::META;
                 } else {
                     error = Some(de::Error::custom(
@@ -507,6 +527,13 @@ mod tests {
 
         let serialized = toml::to_string(&t_with_esc).unwrap();
         assert_eq!(serialized, "kb = \"Esc\"\n");
+    }
+
+    #[test]
+    #[cfg(feature = "case_ignore")]
+    fn deserialize_with_wrong_config() {
+        let desered_t: T = toml::from_str("kb = \"control+c\"\n").unwrap();
+        assert_eq!(desered_t.kb.modifiers, KeyModifiers::CONTROL);
     }
 
     #[test]
