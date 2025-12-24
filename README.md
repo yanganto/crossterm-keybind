@@ -7,7 +7,7 @@ With growing userbases, developers of Terminal UI (TUI)/ Graphic UI (GUI) apps o
 keybinding schemes (like vim-style bindings or personalized shortcuts). Manually supporting such
 requests quickly becomes a maintenance burden, and as your app evolves, users expect their custom
 keybinds to remain compatible across updates. This crate helps you build tui with keybindings config in an easy way.
-One [recipe](https://www.ant-lab.tw/blog/2025-12-24/) with migration guilde for ratatui user are provided,
+One [recipe](https://www.ant-lab.tw/blog/2025-12-24/) with a migration guide for ratatui users is provided,
 which is also under review in working [PR](https://github.com/ratatui/ratatui-website/pull/1008).
 
 ## Core Pattern
