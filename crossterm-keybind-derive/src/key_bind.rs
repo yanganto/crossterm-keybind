@@ -152,13 +152,17 @@ impl Events {
 
                 fn match_any(&self, key_event: &crossterm_keybind::event::KeyEvent) -> bool {
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // TODO deubg message here?
+                        // NOTE 
+                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // in runtime, please run anyfunction after `init_and_load`
+                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                        eprintln!("crossterm-keybing: Keybings are used without initialization, it will never match");
                         return false;
                     }
                     use #name as E;
                     match self {
                         #(
-                            E::#fields => unsafe { (*(&raw mut #uppers)).assume_init_mut() }.match_any(key_event),
+                            E::#fields => unsafe { #uppers.assume_init_ref() }.match_any(key_event),
                         )*
                     }
                 }
@@ -172,21 +176,37 @@ impl Events {
                 }
 
                 fn key_bindings_display(&self) -> String {
+                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
+                        // NOTE 
+                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // in runtime, please run anyfunction after `init_and_load`
+                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                        eprintln!("crossterm-keybing: Keybings do not initialized");
+                        return "UB".to_string();
+                    }
                     match self {
                         #(
-                            #name::#fields => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
+                            #name::#fields => format!("{}", unsafe { #uppers.assume_init_ref() }),
                         )*
                     }
                 }
 
                 fn key_bindings_display_with_format(&self, f: &crossterm_keybind::DisplayFormat) -> String {
+                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
+                        // NOTE 
+                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // in runtime, please run anyfunction after `init_and_load`
+                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                        eprintln!("crossterm-keybing: Keybings do not initialized");
+                        return "UB".to_string();
+                    }
                     match self {
                         #(
                             #name::#fields => {
                                 match f {
-                                    crossterm_keybind::DisplayFormat::Symbols => format!("{}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
-                                    crossterm_keybind::DisplayFormat::Debug => format!("{:?}", unsafe { (*(&raw mut #uppers)).assume_init_mut() }),
-                                    _f => unsafe { (*(&raw mut #uppers)).assume_init_mut() }.display(_f),
+                                    crossterm_keybind::DisplayFormat::Symbols => format!("{}", unsafe { #uppers.assume_init_ref() }),
+                                    crossterm_keybind::DisplayFormat::Debug => format!("{:?}", unsafe { #uppers.assume_init_ref() }),
+                                    _f => unsafe { #uppers.assume_init_ref() }.display(_f),
                                 }
                             },
                         )*
@@ -196,11 +216,15 @@ impl Events {
                 fn dispatch(key_event: &crossterm_keybind::event::KeyEvent) -> Vec<Self> {
                     let mut output = Vec::new();
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // TODO debug message here?
+                        // NOTE 
+                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // in runtime, please run anyfunction after `init_and_load`
+                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                        eprintln!("crossterm-keybing: Keybings are used without initialization, it will never match");
                         return output;
                     }
                     #(
-                        if unsafe { (*(&raw mut #uppers)).assume_init_mut() }.match_any(key_event) {
+                        if unsafe { #uppers.assume_init_ref() }.match_any(key_event) {
                             output.push(#name::#fields);
                         }
                     )*
