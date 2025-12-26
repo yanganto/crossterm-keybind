@@ -1,9 +1,9 @@
 pub trait KeyBindTrait {
     /// Initialize a default key bind config and optionally load a config from the path then patch it
     ///
-    /// Plase noted, this will be the first method you need to call before using `match_any`, `dispatch`,
-    /// `key_bindings_display` or `key_bindings_display_with_format`, such that all the keybind
-    /// from the user can be initialized.
+    /// Please noted, this will be the first method you need to call before using `match_any`,
+    /// `dispatch`, `key_bindings_display` or `key_bindings_display_with_format`, such that all the
+    /// keybind from the user can be initialized.
     fn init_and_load(patch_path: Option<std::path::PathBuf>) -> Result<(), crate::Error>;
 
     /// Key event match for the key bindings

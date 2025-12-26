@@ -156,7 +156,7 @@ impl Events {
                         // You are using crossterm in an expected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        eprintln!("crossterm-keybing: Keybings are used without initialization, it will never match");
+                        crossterm_keybind::log::warn!("Keybings are used without initialization, it will never match");
                         return false;
                     }
                     use #name as E;
@@ -181,8 +181,8 @@ impl Events {
                         // You are using crossterm in an expected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        eprintln!("crossterm-keybing: Keybings do not initialized");
-                        return "UB".to_string();
+                        crossterm_keybind::log::warn!("Keybings do not initialized");
+                        return "".to_string();
                     }
                     match self {
                         #(
@@ -197,8 +197,8 @@ impl Events {
                         // You are using crossterm in an expected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        eprintln!("crossterm-keybing: Keybings do not initialized");
-                        return "UB".to_string();
+                        crossterm_keybind::log::warn!("Keybings do not initialized");
+                        return "".to_string();
                     }
                     match self {
                         #(
@@ -220,7 +220,7 @@ impl Events {
                         // You are using crossterm in an expected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        eprintln!("crossterm-keybing: Keybings are used without initialization, it will never match");
+                        crossterm_keybind::log::warn!("crossterm-keybing: Keybings are used without initialization, it will never match");
                         return output;
                     }
                     #(

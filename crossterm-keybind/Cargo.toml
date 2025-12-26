@@ -17,7 +17,7 @@ default = ["crossterm_0_28_1", "check", "case_ignore"]
 ratatui_0_29_0 = ["dep:crossterm_0_28_1","crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 ratatui_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 crossterm_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
-derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive"]
+derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive", "log"]
 # check the default keybinding format when compiling
 check = ["crossterm-keybind-derive/check"]
 # case_ignore on modifiers
@@ -32,6 +32,7 @@ toml = { version = "0.9.10", optional = true }
 toml-example = { version = "0.16.1", optional = true }
 struct-patch = { version = "0.10.4", optional = true }
 thiserror = "2.0.17"
+log = { version = "0.4.29", optional = true }
 
 [dev-dependencies]
 toml = "0.9.10"
