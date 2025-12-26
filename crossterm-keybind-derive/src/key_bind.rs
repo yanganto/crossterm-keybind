@@ -156,7 +156,7 @@ impl Events {
                         // You are using crossterm in an unexpected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybings are used without initialization, it will never match");
+                        crossterm_keybind::log::warn!("Keybindings are used without initialization, it will never match");
                         return false;
                     }
                     use #name as E;
@@ -178,10 +178,10 @@ impl Events {
                 fn key_bindings_display(&self) -> String {
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
                         // NOTE 
-                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // You are using crossterm in an unexpected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybings do not initialized");
+                        crossterm_keybind::log::warn!("Keybindings do not initialized");
                         return "".to_string();
                     }
                     match self {
@@ -194,10 +194,10 @@ impl Events {
                 fn key_bindings_display_with_format(&self, f: &crossterm_keybind::DisplayFormat) -> String {
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
                         // NOTE 
-                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // You are using crossterm in an unexpected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybings do not initialized");
+                        crossterm_keybind::log::warn!("Keybindings do not initialized");
                         return "".to_string();
                     }
                     match self {
@@ -217,10 +217,10 @@ impl Events {
                     let mut output = Vec::new();
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
                         // NOTE 
-                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // You are using crossterm in an unexpected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("crossterm-keybing: Keybings are used without initialization, it will never match");
+                        crossterm_keybind::log::warn!("Keybindings are used without initialization, it will never match");
                         return output;
                     }
                     #(
