@@ -153,7 +153,7 @@ impl Events {
                 fn match_any(&self, key_event: &crossterm_keybind::event::KeyEvent) -> bool {
                     if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
                         // NOTE 
-                        // You are using crossterm in an expected way, we prevent UB but not panic
+                        // You are using crossterm in an unexpected way, we prevent UB but not panic
                         // in runtime, please run anyfunction after `init_and_load`
                         // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
                         crossterm_keybind::log::warn!("Keybings are used without initialization, it will never match");
