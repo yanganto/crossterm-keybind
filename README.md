@@ -127,7 +127,7 @@ you can specific the version of ratatui or the version of crossterm as features 
 ```toml
 crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_30_0", "derive"] } # work with ratatui 0.30.0
 ```
-Now supporting `0.28.1`, `0.30.0` of ratatui, if need another specific version, please open an issue.
+Now supporting `0.28.1`, `0.30.0` of ratatui, if you need another specific version, please open an issue.
 
 ## Summary
 
