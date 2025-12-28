@@ -16,6 +16,8 @@
 mod error;
 mod traits;
 
+#[cfg(feature = "crossterm_0_29_0")]
+pub use crossterm_0_29_0::event;
 #[cfg(feature = "crossterm_0_28_1")]
 pub use crossterm_0_28_1::event;
 #[cfg(feature = "derive")]
