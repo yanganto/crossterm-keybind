@@ -125,8 +125,9 @@ serde = { version = "*", features = ["derive"] }
 If the project does not dependent on the latest `ratatui` or `crossterm`,
 you can specific the version of ratatui or the version of crossterm as features in following way.
 ```toml
-crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_28_1", "derive"] } # work with ratatui 0.28.1
+crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_30_0", "derive"] } # work with ratatui 0.30.0
 ```
+Now supporting `0.28.1`, `0.30.0` of ratatui, if need another specific version, please open an issue.
 
 ## Summary
 
