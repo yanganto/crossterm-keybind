@@ -151,7 +151,7 @@ impl Events {
                 // You are using crossterm in an unexpected way, we prevent UB but not panic
                 // in runtime, please run anyfunction after `init_and_load`
                 // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                crossterm_keybind::log::warn!("Keybindings do not initialized");
+                crossterm_keybind::log::warn!("Keybindings are not initialized");
                 return String::new();
             }
         };
