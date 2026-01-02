@@ -12,6 +12,10 @@ readme.workspace = true
 rust-version.workspace = true
 categories.workspace = true
 
+[features]
+default = ["crossterm-keybind/default"]
+slim = ["crossterm-keybind/crossterm_0_29_0", "crossterm-keybind/derive"]
+
 [dependencies]
-crossterm-keybind = { version = "=0.3.3", path = "../crossterm-keybind", features = ["derive"] }
+crossterm-keybind = { version = "=0.3.4", path = "../crossterm-keybind", default-features = false }
 serde = { version = "1.0", features = ["derive"] }

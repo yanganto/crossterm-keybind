@@ -98,6 +98,66 @@ impl Events {
             defaults.push(default_stream);
         }
 
+        #[cfg(feature = "safety")]
+        let safety_check_para_impl = quote! {
+            static BINDING_INIT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+        };
+        #[cfg(not(feature = "safety"))]
+        let safety_check_para_impl = quote! {};
+
+        #[cfg(feature = "safety")]
+        let safety_check_init_impl = quote! {
+            if BINDING_INIT.load(std::sync::atomic::Ordering::Relaxed) {
+                return Err(crossterm_keybind::Error::ConfigDoubleInitError);
+            } else {
+                BINDING_INIT.store(true, std::sync::atomic::Ordering::Release);
+            }
+        };
+        #[cfg(not(feature = "safety"))]
+        let safety_check_init_impl = quote! {};
+
+        #[cfg(feature = "safety")]
+        let safety_check_match_impl = quote! {
+            if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
+                // NOTE 
+                // You are using crossterm in an unexpected way, we prevent UB but not panic
+                // in runtime, please run anyfunction after `init_and_load`
+                // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                crossterm_keybind::log::warn!("Keybindings are used without initialization, it will never match");
+                return false;
+            }
+        };
+        #[cfg(not(feature = "safety"))]
+        let safety_check_match_impl = quote! {};
+
+        #[cfg(feature = "safety")]
+        let safety_check_dispatch_impl = quote! {
+            if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
+                // NOTE 
+                // You are using crossterm in an unexpected way, we prevent UB but not panic
+                // in runtime, please run anyfunction after `init_and_load`
+                // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                crossterm_keybind::log::warn!("Keybindings are used without initialization, it will never match");
+                return Vec::new();
+            }
+        };
+        #[cfg(not(feature = "safety"))]
+        let safety_check_dispatch_impl = quote! {};
+
+        #[cfg(feature = "safety")]
+        let safety_check_display_impl = quote! {
+            if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
+                // NOTE 
+                // You are using crossterm in an unexpected way, we prevent UB but not panic
+                // in runtime, please run anyfunction after `init_and_load`
+                // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
+                crossterm_keybind::log::warn!("Keybindings do not initialized");
+                return String::new();
+            }
+        };
+        #[cfg(not(feature = "safety"))]
+        let safety_check_display_impl = quote! {};
+
         Ok(quote! {
             use crossterm_keybind::toml_example;
             use crossterm_keybind::toml_example::TomlExample;
@@ -119,19 +179,15 @@ impl Events {
                 )*
 
             }
-            static BINDING_INIT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+            #safety_check_para_impl
             #(
                 static mut #uppers: core::mem::MaybeUninit<crossterm_keybind::KeyBindings> = core::mem::MaybeUninit::uninit();
             )*
 
             impl crossterm_keybind::KeyBindTrait for #name {
                 fn init_and_load(patch_path: Option<std::path::PathBuf>) -> Result<(), crossterm_keybind::Error>{
-                    if BINDING_INIT.load(std::sync::atomic::Ordering::Relaxed) {
-                        return Err(crossterm_keybind::Error::ConfigDoubleInitError);
-                    } else {
-                        BINDING_INIT.store(true, std::sync::atomic::Ordering::Release);
-                    }
-
+                    #safety_check_init_impl
                     let mut key_config: DefaultBinding =
                         toml::from_str(&DefaultBinding::toml_example()).map_err(|e|crossterm_keybind::Error::DefaultConfigError(e.to_string()))?;
                     if let Some(p) = patch_path {
@@ -151,14 +207,7 @@ impl Events {
                 }
 
                 fn match_any(&self, key_event: &crossterm_keybind::event::KeyEvent) -> bool {
-                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // NOTE 
-                        // You are using crossterm in an unexpected way, we prevent UB but not panic
-                        // in runtime, please run anyfunction after `init_and_load`
-                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybindings are used without initialization, it will never match");
-                        return false;
-                    }
+                    #safety_check_match_impl
                     use #name as E;
                     match self {
                         #(
@@ -176,14 +225,7 @@ impl Events {
                 }
 
                 fn key_bindings_display(&self) -> String {
-                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // NOTE 
-                        // You are using crossterm in an unexpected way, we prevent UB but not panic
-                        // in runtime, please run anyfunction after `init_and_load`
-                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybindings do not initialized");
-                        return "".to_string();
-                    }
+                    #safety_check_display_impl
                     match self {
                         #(
                             #name::#fields => format!("{}", unsafe { #uppers.assume_init_ref() }),
@@ -192,14 +234,7 @@ impl Events {
                 }
 
                 fn key_bindings_display_with_format(&self, f: &crossterm_keybind::DisplayFormat) -> String {
-                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // NOTE 
-                        // You are using crossterm in an unexpected way, we prevent UB but not panic
-                        // in runtime, please run anyfunction after `init_and_load`
-                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybindings do not initialized");
-                        return "".to_string();
-                    }
+                    #safety_check_display_impl
                     match self {
                         #(
                             #name::#fields => {
@@ -215,14 +250,7 @@ impl Events {
 
                 fn dispatch(key_event: &crossterm_keybind::event::KeyEvent) -> Vec<Self> {
                     let mut output = Vec::new();
-                    if !BINDING_INIT.load(std::sync::atomic::Ordering::Acquire) {
-                        // NOTE 
-                        // You are using crossterm in an unexpected way, we prevent UB but not panic
-                        // in runtime, please run anyfunction after `init_and_load`
-                        // https://docs.rs/crossterm-keybind/latest/crossterm_keybind/trait.KeyBindTrait.html#tymethod.init_and_load
-                        crossterm_keybind::log::warn!("Keybindings are used without initialization, it will never match");
-                        return output;
-                    }
+                    #safety_check_dispatch_impl
                     #(
                         if unsafe { #uppers.assume_init_ref() }.match_any(key_event) {
                             output.push(#name::#fields);
