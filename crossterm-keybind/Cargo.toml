@@ -27,7 +27,7 @@ derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive", "l
 check = ["crossterm-keybind-derive/check"]
 # case_ignore on modifiers when matching
 case_ignore = ["crossterm-keybind-core/case_ignore"]
-# make sure safety on memory reading incase  `init_and_load` of keybind config does not called before used
+# make sure safety on memory reading in case `init_and_load` of keybind config does not called before used
 safety = ["crossterm-keybind-derive/safety"]
 
 [dependencies]
