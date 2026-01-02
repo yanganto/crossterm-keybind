@@ -118,16 +118,21 @@ You can trigger Quit by Ctrl+c | Q | q
 We need additional serde dependency at the same time.
 ```toml
 # Cargo.toml
-crossterm-keybind = { version = "*", features = ["derive"] }
+crossterm-keybind = "*"
 serde = { version = "*", features = ["derive"] }
 ```
 
 If the project does not dependent on the latest `ratatui` or `crossterm`,
 you can specific the version of ratatui or the version of crossterm as features in following way.
 ```toml
-crossterm-keybind = { version = "*", default-features = false, features = ["ratatui_0_30_0", "derive"] } # work with ratatui 0.30.0
+crossterm-keybind = { 
+  version = "*", 
+  default-features = false, 
+  features = ["ratatui_0_30_0",  "check", "case_ignore", "safety", "derive"]  # work with ratatui 0.30.0
+}
 ```
 Now supporting `0.28.1`, `0.30.0` of ratatui, if you need another specific version, please open an issue.
+Please check the [doc](https://github.com/yanganto/crossterm-keybind/blob/main/crossterm-keybind/Cargo.toml#L23-L31) of features, if you want to tailor the implementation from macro.
 
 ## Summary
 
