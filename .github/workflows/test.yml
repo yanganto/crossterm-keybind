@@ -31,6 +31,6 @@ jobs:
         run: |
           nix develop -c cargo run
 
-      - name: Run example with ratatui without safty checks
+      - name: Run example with ratatui without safety checks
         run: |
           nix develop -c cargo run --no-default-features --features=slim
