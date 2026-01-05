@@ -15,7 +15,9 @@ rust-version.workspace = true
 [features]
 default = ["crossterm_0_29_0", "check", "case_ignore", "safety", "derive"]
 ratatui_0_30_0 = ["dep:crossterm_0_29_0", "crossterm-keybind-core/crossterm_0_29_0", "crossterm-keybind-derive/crossterm_0_29_0"]
+ratatui_0_29_0 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 ratatui_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
+ratatui_0_28_0 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 
 crossterm_0_29_0 = ["dep:crossterm_0_29_0", "crossterm-keybind-core/crossterm_0_29_0", "crossterm-keybind-derive/crossterm_0_29_0"]
 crossterm_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]

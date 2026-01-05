@@ -131,7 +131,7 @@ crossterm-keybind = {
   features = ["ratatui_0_30_0",  "check", "case_ignore", "safety", "derive"]  # work with ratatui 0.30.0
 }
 ```
-Now supporting `0.28.1`, `0.30.0` of ratatui, if you need another specific version, please open an issue.
+Now supporting from `0.28.0` to `0.30.0` of ratatui, if you need another specific version, please open an issue.
 Please check the [doc](https://github.com/yanganto/crossterm-keybind/blob/main/crossterm-keybind/Cargo.toml#L23-L31) of features, if you want to tailor the implementation from macro.
 
 ## Summary
