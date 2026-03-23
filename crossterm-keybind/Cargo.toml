@@ -41,7 +41,7 @@ crossterm_0_28_1 = { package = "crossterm", version = "0.28.1", optional = true,
 toml = { version = "1.0.6", optional = true }
 toml-example = { version = "0.16.2", optional = true }
 struct-patch = { version = "0.10.4", optional = true }
-thiserror = "2.0.17"
+thiserror = "2.0.18"
 log = { version = "0.4.29", optional = true }
 
 [dev-dependencies]
