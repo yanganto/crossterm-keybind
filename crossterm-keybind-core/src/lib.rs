@@ -26,7 +26,6 @@ pub enum DisplayFormat {
 
 #[derive(PartialEq)]
 pub struct KeyBinding {
-    // TODO: Where is Space
     pub code: KeyCode,
     pub modifiers: KeyModifiers,
 }
@@ -84,6 +83,10 @@ impl Serialize for KeyBinding {
 }
 
 fn str_to_keycode(s: &str) -> KeyCode {
+    // Interpreting a single whitespace as Space
+    if s == " " {
+        return KeyCode::Char(' ');
+    }
     let s = s.trim();
     if s.len() == 1 {
         KeyCode::Char(s.chars().next().unwrap())
