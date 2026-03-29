@@ -6,6 +6,17 @@ pub trait KeyBindTrait {
     /// keybind from the user can be initialized.
     fn init_and_load(patch_path: Option<std::path::PathBuf>) -> Result<(), crate::Error>;
 
+    /// Initialize a default key bind config and optionally patch it from a pre-parsed,
+    /// serializable value (e.g. a `toml::Table`.
+    ///
+    /// Unlike `init_and_load`, this method performs no file I/O, allowing host applications
+    /// to manage a config file storage and extraction as it sees fit.
+    ///
+    /// Please note, this will be the first method you need to call before using `match_any`,
+    /// `dispatch`, `key_bindings_display` or `key_bindings_display_with_format`.
+    #[cfg(feature = "derive")]
+    fn init_from_table<T: crate::serde::Serialize>(patch_table: Option<T>) -> Result<(), crate::Error>;
+
     /// Key event match for the key bindings
     ///
     /// Please note, this method requires `init_and_load` to run ahead.

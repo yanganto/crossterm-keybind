@@ -31,6 +31,8 @@ pub use toml;
 pub use toml_example;
 #[cfg(feature = "derive")]
 pub use log;
+#[cfg(feature = "derive")]
+pub use serde;
 pub use traits::KeyBindTrait;
 
 pub use crossterm_keybind_core::{KeyBinding, KeyBindings, DisplayFormat};

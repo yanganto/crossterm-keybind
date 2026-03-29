@@ -206,6 +206,27 @@ impl Events {
                     Ok(())
                 }
 
+                fn init_from_table<T: crossterm_keybind::serde::Serialize>(patch_table: Option<T>) -> Result<(), crossterm_keybind::Error> {
+                    #safety_check_init_impl
+                    let mut key_config: DefaultBinding =
+                        toml::from_str(&DefaultBinding::toml_example()).map_err(|e| crossterm_keybind::Error::DefaultConfigError(e.to_string()))?;
+                    if let Some(table) = patch_table {
+                        let contents = toml::to_string(&table)
+                            .map_err(|e| crossterm_keybind::Error::LoadConfigError(e.to_string()))?;
+                        let patch: KeyBinding =
+                            toml::from_str(&contents).map_err(|e| crossterm_keybind::Error::LoadConfigError(e.to_string()))?;
+                        key_config.apply(patch);
+                    }
+
+                    unsafe {
+                        #(
+                            #uppers = core::mem::MaybeUninit::new(key_config.#lowers);
+                        )*
+                    }
+
+                    Ok(())
+                }
+
                 fn match_any(&self, key_event: &crossterm_keybind::event::KeyEvent) -> bool {
                     #safety_check_match_impl
                     use #name as E;

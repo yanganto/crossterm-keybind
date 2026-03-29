@@ -61,6 +61,7 @@ dependencies = [
  "crossterm-keybind-core",
  "crossterm-keybind-derive",
  "log",
+ "serde",
  "struct-patch",
  "thiserror",
  "toml",

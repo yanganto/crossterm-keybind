@@ -23,7 +23,7 @@ crossterm_0_29_0 = ["dep:crossterm_0_29_0", "crossterm-keybind-core/crossterm_0_
 crossterm_0_28_1 = ["dep:crossterm_0_28_1", "crossterm-keybind-core/crossterm_0_28_1", "crossterm-keybind-derive/crossterm_0_28_1"]
 
 # provide macro to implement KeyBindTrait
-derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive", "log"]
+derive = ["toml", "toml-example", "struct-patch", "crossterm-keybind-derive", "log", "serde"]
 
 # check the default keybinding format when compiling
 check = ["crossterm-keybind-derive/check"]
@@ -41,6 +41,7 @@ crossterm_0_28_1 = { package = "crossterm", version = "0.28.1", optional = true,
 toml = { version = "1.0.7", optional = true }
 toml-example = { version = "0.16.4", optional = true }
 struct-patch = { version = "0.10.4", optional = true }
+serde = { version = "1.0", optional = true }
 thiserror = "2.0.18"
 log = { version = "0.4.29", optional = true }
 
