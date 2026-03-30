@@ -19,7 +19,7 @@ use crossterm_keybind::KeyBind;
 #[derive(KeyBind)]
 pub enum KeyEvent {
     /// The app will be closed with following key bindings
-    /// - combin key Control and c
+    /// - combined keys Control and c
     /// - single key Q
     /// - single key q
     #[keybindings["Control+c", "Q", "q"]]
@@ -35,7 +35,7 @@ pub enum KeyEvent {
 
 You can easily use `Quit.match_any(&key)` in the control flow,
 
-In a less comparing way
+In a less verbose way
 ```rust
 if KeyBindEvent::Quit.match_any(&key) {
   // Close the app
@@ -66,18 +66,49 @@ You can easily provide a key bind config **with documentation** by `KeyEvent::to
 
 ```toml
 # The app will be closed with following key bindings
-# - combin key Control and c
+# - combined keys Control and c
 # - single key Q
 # - single key q
 quit = ["Control+c", "Q", "q"]
 
 # A toggle to open/close a widget show all the commands
 toggle_help_widget = ["F1", "?"]
- 
 ```
-Then, users can customize the key as they need and the config can be initialized and load by `KeyEvent::init_and_load(key_config)`.
 
-### How can users customize their keybinds
+### Initialization
+
+Before dispatching key events, you must initialize the keybindings once at startup.
+This loads the default bindings defined in your enum's `#[keybindings[...]]` attributes,
+and optionally patches them with a user-supplied config.
+
+**`init_and_load`** — use this when keybindings live in a dedicated config file managed
+by this crate:
+
+```rust
+// No user config — use built-in defaults only
+KeyEvent::init_and_load(None)?;
+
+// Load defaults, then patch from a user-supplied keybind config file
+KeyEvent::init_and_load(Some(PathBuf::from("~/.config/myapp/keybinds.toml")))?;
+```
+
+**`init_from_table`** — use this when your application already manages its own config
+file (e.g. using an alternative storage format) and you just want to take advantage
+of the macros and configuration merging.
+
+```rust
+// Parse your own config file
+let config: toml::Table = toml::from_str(&std::fs::read_to_string("config.toml")?)?;
+
+// Extract the [keybinds] section (if present) and pass it directly
+let keybinds_table = config.get("keybinds").and_then(|v| v.as_table()).cloned();
+KeyEvent::init_from_table(keybinds_table)?;
+```
+
+Both methods apply the same patching logic: only the keys present in the user config
+override defaults; everything else falls back to the values declared in the enum.
+
+### How users can customize their keybinds
 
 We additionally take care of override issues using the struct-patch feature.
 
@@ -94,27 +125,40 @@ remain the same as the default, because the user did not customize them, so the 
 `F1` or `?` to open the widget. You also get the benefit of **backward compatibility** for key configs,
 if you only make additions to the key binding enum.
 
-### How to hint user the keybinds
+### How to hint keybinds to user
 
-An app with customized keybinding, user may be confused to use the app when the keybind is changed, 
-it will be nice to hint user current keybind for Quit by `Quit.key_bindings_display()`(same as symbols format) or 
-`Quit.key_bindings_display_with_format(DisplayFormat::...)` in the ui.
+To help users know what keys to use, you may want to display back to them the keybindings that they may
+have also customized. Let's assume your enum is `KeyEvent` and it contains a custom `Quit` action. You
+can leverage `key_bindings_display()` or `key_bindings_display_with_format()`, for example, like so:
+
+```rust
+#[derive(KeyBind)]
+enum KeyEvent {
+    #[keybindings["Control+c", "Q", "q"]]
+    Quit,
+}
+
+// This is short-hand for key_bindings_display_with_format(DisplayFormat::Symbols)
+let quit_str = KeyEvent::Quit::key_bindings_display();
+println!("You can trigger Quit by {}", quit_str);
+```
 
 ```text
---- Following keybinds are displayed with symbols
+--- key_bindings_display_with_format(DisplayFormat::Symbols) ---
 You can trigger Quit by ^c|Q|q
 
---- Following keybinds are displayed with DisplayFormat::Debug ---
+--- key_bindings_display_with_format(DisplayFormat::Debug) ---
 You can trigger Quit by ["Control+c", "Q", "q"]
 
---- Following are keybinds displayed with DisplayFormat::Full ---
+--- key_bindings_display_with_format(DisplayFormat::Full) ---
 You can trigger Quit by Control+c | Q | q
 
---- Following are keybinds displayed with DisplayFormat::Abbreviation ---
+--- key_bindings_display_with_format(DisplayFormat::Abbreviation) ---
 You can trigger Quit by Ctrl+c | Q | q
 ```
 
 ## Dependency
+
 We need additional serde dependency at the same time.
 ```toml
 # Cargo.toml
@@ -122,8 +166,8 @@ crossterm-keybind = "*"
 serde = { version = "*", features = ["derive"] }
 ```
 
-If the project does not dependent on the latest `ratatui` or `crossterm`,
-you can specific the version of ratatui or the version of crossterm as features in following way.
+If the project does not depend on the latest `ratatui` or `crossterm`,
+you can specify the version of ratatui or the version of crossterm as features in the following way.
 ```toml
 crossterm-keybind = { 
   version = "*", 
