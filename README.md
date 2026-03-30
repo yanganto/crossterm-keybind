@@ -93,11 +93,11 @@ KeyEvent::init_and_load(Some(PathBuf::from("~/.config/myapp/keybinds.toml")))?;
 ```
 
 **`init_from_table`** — use this when your application already manages its own config
-file (e.g. using an alternative storage format) and you just want to take advantage
+file (e.g. using an alternative storage backend) and you just want to take advantage
 of the macros and configuration merging.
 
 ```rust
-// Parse your own config file
+// Parse your own config file, let's pretend there's a [keybinds] section in it
 let config: toml::Table = toml::from_str(&std::fs::read_to_string("config.toml")?)?;
 
 // Extract the [keybinds] section (if present) and pass it directly
