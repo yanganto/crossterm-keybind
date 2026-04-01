@@ -54,7 +54,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind"
-version = "0.3.6"
+version = "0.4.0"
 dependencies = [
  "crossterm 0.28.1",
  "crossterm 0.29.0",
@@ -70,7 +70,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-core"
-version = "0.3.6"
+version = "0.4.0"
 dependencies = [
  "crossterm 0.28.1",
  "crossterm 0.29.0",
@@ -81,7 +81,7 @@ dependencies = [
 
 [[package]]
 name = "crossterm-keybind-derive"
-version = "0.3.6"
+version = "0.4.0"
 dependencies = [
  "convert_case",
  "crossterm-keybind-core",
@@ -118,7 +118,7 @@ dependencies = [
 
 [[package]]
 name = "example"
-version = "0.3.6"
+version = "0.4.0"
 dependencies = [
  "crossterm-keybind",
  "serde",
