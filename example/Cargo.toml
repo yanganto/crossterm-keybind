@@ -17,5 +17,5 @@ default = ["crossterm-keybind/default"]
 slim = ["crossterm-keybind/crossterm_0_29_0", "crossterm-keybind/derive"]
 
 [dependencies]
-crossterm-keybind = { version = "=0.3.6", path = "../crossterm-keybind", default-features = false }
+crossterm-keybind = { version = "=0.4.0", path = "../crossterm-keybind", default-features = false }
 serde = { version = "1.0", features = ["derive"] }
