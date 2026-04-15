@@ -390,6 +390,7 @@ impl KeyBinding {
                     (_, _) => "UNKNOWN+".to_string(),
                 };
                 match self.code {
+                    KeyCode::Char(' ') => display.push_str("Space"),
                     KeyCode::Char(c) => display.push(c),
                     KeyCode::Backspace => display.push_str("Backspace"),
                     KeyCode::Enter => display.push_str("Enter"),
