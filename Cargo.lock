@@ -398,9 +398,9 @@ checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
 
 [[package]]
 name = "str-utils"
-version = "0.3.1"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0ba6201395531a37574515e1150331329ec0feb5ccfdce454ea368ecb219263"
+checksum = "ed83a51d9316ce8c7ef3897b573c29dda24eb402a80bdbce3bd19d063f4c0f86"
 dependencies = [
  "unicase",
  "utf8-width",
