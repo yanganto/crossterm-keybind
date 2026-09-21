@@ -20,5 +20,5 @@ slim = ["crossterm-keybind/crossterm_0_29_0", "crossterm-keybind/derive"]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("status", "op", "merge", "nesting", "substrate", "catalyst", "unsafe", "box"))'] }
 
 [dependencies]
-crossterm-keybind = { version = "=0.4.3", path = "../crossterm-keybind", default-features = false }
+crossterm-keybind = { version = "=0.4.4", path = "../crossterm-keybind", default-features = false }
 serde = { version = "1.0", features = ["derive"] }
