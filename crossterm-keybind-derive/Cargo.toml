@@ -16,7 +16,7 @@ rust-version.workspace = true
 proc-macro = true
 
 [dependencies]
-crossterm-keybind-core  = { version = "=0.4.3", path = "../crossterm-keybind-core", optional = true }
+crossterm-keybind-core  = { version = "=0.4.4", path = "../crossterm-keybind-core", optional = true }
 
 syn = { version = "3.0", features = ["parsing", "extra-traits"] }
 quote = "1.0"
