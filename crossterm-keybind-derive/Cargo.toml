@@ -30,3 +30,6 @@ check = ["crossterm-keybind-core", "serde_json"]
 crossterm_0_29_0 = ["crossterm-keybind-core/crossterm_0_29_0"]
 crossterm_0_28_1 = ["crossterm-keybind-core/crossterm_0_28_1"]
 safety = []
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("status", "op", "merge", "nesting", "substrate", "catalyst", "unsafe", "box"))'] }

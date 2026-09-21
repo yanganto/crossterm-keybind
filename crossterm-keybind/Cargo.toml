@@ -50,3 +50,6 @@ log = { version = "0.4.32", optional = true }
 
 [dev-dependencies]
 toml = "1.1.2"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("status", "op", "merge", "nesting", "substrate", "catalyst", "unsafe", "box"))'] }
