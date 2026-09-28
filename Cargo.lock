@@ -408,18 +408,18 @@ dependencies = [
 
 [[package]]
 name = "struct-patch"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86b85f8207081f19882f51816b0159ebe8edd2d27e22d0eabc133c9a379dab94"
+checksum = "f0ee07934f1c5e7448b77d32605343bd04dd0fd701d175547b8c5d8811df135d"
 dependencies = [
  "struct-patch-derive",
 ]
 
 [[package]]
 name = "struct-patch-derive"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cbd66117d4448f48d3610d915ee7804e68d3d439c3c6baa40da859bab008dee"
+checksum = "3eff29edf63ab4964ec856c27c3ceec8d4b9dfbeb992e855215d0259f8e61f8c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -439,18 +439,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.20"
+version = "2.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec86235f5fcc2a73650310756d2ac5b138a5780bbbdfae3eeccec992c435ba4f"
+checksum = "09e52cb86a36cede5cb101bf8908837b3e4c6e5e59fe7fd85c23fb56200d189e"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.20"
+version = "2.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc04cd3e1236dd4a98afca4569f2deb3f120e5422a4023be2cb683f8486292af"
+checksum = "fe5197923287db20a58125f0bc85c062f7f2c892de97b18c356f9efb14b28524"
 dependencies = [
  "proc-macro2",
  "quote",
